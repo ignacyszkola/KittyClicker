@@ -1,12 +1,3 @@
 # KittyClicker
-# KittyClicker
-# KittyClicker
-# KittyClicker
-# KittyClicker
-# KittyClicker
-# KittyClicker
-# KittyClicker
-# KittyClicker
-# KittyClicker
-# KittyClicker
-# KittyClicker
+
+more changes in the future
