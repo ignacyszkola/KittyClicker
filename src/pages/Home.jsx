@@ -1,5 +1,11 @@
+import "./Home.css";
+
 function Home() {
-    return <h2>Home</h2>
+  return (
+    <>
+      <h2 className="homeTitle">KittyClicker</h2>
+    </>
+  );
 }
 
-export default Home
+export default Home;

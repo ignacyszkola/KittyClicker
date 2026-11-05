@@ -1,0 +1,13 @@
+body {
+  background-color: #ffe6ee;
+}
+
+.homeTitle {
+  text-align: center;
+  font-family: "Pacifico";
+  color: white;
+  font-size: 70px;
+  margin-top: 10px;
+  -webkit-text-stroke: 3px black;
+  paint-order: stroke fill;
+}
