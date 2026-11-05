@@ -6,8 +6,8 @@ body {
   text-align: center;
   font-family: "Pacifico";
   color: white;
-  font-size: 70px;
-  margin-top: 10px;
+  font-size: 64px;
+  margin: 0;
   -webkit-text-stroke: 3px black;
   paint-order: stroke fill;
 }
@@ -25,6 +25,48 @@ body {
 }
 
 .menuButton img {
-    width: 60px;
-    height: 60px;
+  width: 60px;
+  height: 60px;
+}
+
+.shop {
+  background-color: #ffb7ce;
+  width: 419.38px;
+  height: 1080px;
+  position: fixed;
+  top: 0px;
+  right: 0px;
+}
+
+.shop h2 {
+  text-align: center;
+  font-family: "Pacifico";
+  color: white;
+  font-size: 55px;
+  margin: 0;
+}
+
+.shopHeaderButtons {
+  display: flex;
+  margin-top: 5px;
+}
+
+.shopHeaderButtons button {
+  background-color: #f877a0;
+  width: 212px;
+  height: 47.48px;
+  border: white 2px solid;
+  font-family: "Pacifico";
+  font-size: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#shopCatButton {
+  color: #1eff00;
+}
+
+#shopUpgradeButton {
+  color: white;
 }
