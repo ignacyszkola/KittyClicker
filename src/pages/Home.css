@@ -11,3 +11,20 @@ body {
   -webkit-text-stroke: 3px black;
   paint-order: stroke fill;
 }
+
+.menuButton {
+  background-color: #ffb7ce;
+  width: 100px;
+  height: 100px;
+  border: none;
+  border-top-right-radius: 15px;
+  border-bottom-right-radius: 15px;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.menuButton img {
+    width: 60px;
+    height: 60px;
+}
