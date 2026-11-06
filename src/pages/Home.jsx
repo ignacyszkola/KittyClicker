@@ -50,7 +50,7 @@ function MoneyCounter({ moneyNumber }) {
 }
 
 function Home() {
-  const [clicks, setClicks] = useState(1000000000000);
+  const [clicks, setClicks] = useState(111111100000000000);
   const [money, setMoney] = useState(2137);
   return (
     <>
