@@ -3,6 +3,7 @@ import menuIcon from "../assets/menu.svg";
 import cursorIcon from "../assets/cursor.png";
 import catFoodIcon from "../assets/cat-food.png";
 import { useState } from "react";
+import { FormatNumber } from "../utils/FormatNumber";
 
 function OpenLeftMenuButton() {
   return (
@@ -34,7 +35,7 @@ function ClickCounter({ clicksNumber }) {
   return (
     <div className="clickCounter">
       <img src={cursorIcon} />
-      <p>{clicksNumber}</p>
+      <p>{FormatNumber(clicksNumber)}</p>
     </div>
   );
 }
@@ -43,7 +44,7 @@ function MoneyCounter({ moneyNumber }) {
   return (
     <div className="moneyCounter">
       <img src={catFoodIcon} />
-      <p>{moneyNumber}</p>
+      <p>{FormatNumber(moneyNumber)}</p>
     </div>
   );
 }
