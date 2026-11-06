@@ -4,6 +4,7 @@ import cursorIcon from "../assets/cursor.png";
 import catFoodIcon from "../assets/cat-food.png";
 import { useState } from "react";
 import { FormatNumber } from "../utils/FormatNumber";
+import LeftMenu from "../components/LeftMenu";
 
 function OpenLeftMenuButton() {
   return (
@@ -59,6 +60,7 @@ function Home() {
       <Shop money={money} />
       <ClickCounter clicksNumber={clicks} />
       <MoneyCounter moneyNumber={money} />
+      <LeftMenu />
     </>
   );
 }

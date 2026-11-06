@@ -1,0 +1,25 @@
+.leftMenu {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 300px;
+  gap: 40px;
+  width: 210px;
+}
+
+.leftMenu button {
+  background-color: #ffb7ce;
+  border-radius: 25px;
+  border: white 3px solid;
+  height: 80px;
+  color: white;
+  font-family: "Pacifico";
+  font-size: 30px;
+  display: flex;
+  align-items: center;
+}
+
+.leftMenu img {
+  height: 50px;
+  width: 50px;
+}
