@@ -2,14 +2,15 @@ import "./Home.css";
 import menuIcon from "../assets/menu.svg";
 import cursorIcon from "../assets/cursor.png";
 import catFoodIcon from "../assets/cat-food.png";
+import closeIcon from "../assets/close.svg";
 import { useState } from "react";
 import { FormatNumber } from "../utils/FormatNumber";
 import LeftMenu from "../components/LeftMenu";
 
-function OpenLeftMenuButton() {
+function OpenLeftMenuButton({ onClick, isOpen }) {
   return (
-    <button className="menuButton">
-      <img src={menuIcon} />
+    <button className="menuButton" onClick={onClick}>
+      <img src={isOpen ? closeIcon : menuIcon} />
     </button>
   );
 }
@@ -53,14 +54,18 @@ function MoneyCounter({ moneyNumber }) {
 function Home() {
   const [clicks, setClicks] = useState(111111100000000000);
   const [money, setMoney] = useState(2137);
+  const [leftMenuOpen, setLeftMenuOpen] = useState(false);
   return (
     <>
       <h1 className="homeTitle">KittyClicker</h1>
-      <OpenLeftMenuButton />
+      <OpenLeftMenuButton
+        isOpen={leftMenuOpen}
+        onClick={() => setLeftMenuOpen((open) => !open)}
+      />
       <Shop money={money} />
       <ClickCounter clicksNumber={clicks} />
       <MoneyCounter moneyNumber={money} />
-      <LeftMenu />
+      <LeftMenu isOpen={leftMenuOpen} onClose={() => setLeftMenuOpen(false)} />
     </>
   );
 }

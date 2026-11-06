@@ -4,9 +4,9 @@ import catIcon from "../assets/cat.svg";
 import inventoryIcon from "../assets/inventory.svg";
 import trophyIcon from "../assets/trophy.svg";
 
-function LeftMenu() {
+function LeftMenu({isOpen, onClose}) {
   return (
-    <div className="leftMenu">
+    <div className={`leftMenu ${isOpen ? "open" : ""}`}>
       <button className="achievmentsButton">
         <img src={trophyIcon} />
         Osiągnięcia
