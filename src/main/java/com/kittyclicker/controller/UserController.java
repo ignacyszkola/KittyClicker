@@ -31,6 +31,5 @@ public class UserController {
         r.put("message", "KittyClicker API is running");
         return r;
     }
-
-
+    
 }
