@@ -41,6 +41,7 @@
   transform: translateX(0);
 }
 
-.leftMenu button.active, .leftMenu button.active:hover {
+.leftMenu button.active,
+.leftMenu button.active:hover {
   background-color: #f877a0;
 }

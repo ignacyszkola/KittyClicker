@@ -7,6 +7,8 @@ import { useState } from "react";
 import { FormatNumber } from "../utils/FormatNumber";
 import LeftMenu from "../components/LeftMenu";
 import AchievmentsMenu from "../components/AchievmentsMenu";
+import ItemsMenu from "../components/ItemsMenu";
+import CatsMenu from "../components/CatsMenu";
 
 function OpenLeftMenuButton({ onClick, isOpen }) {
   return (
@@ -57,6 +59,8 @@ function Home() {
   const [money, setMoney] = useState(2137);
   const [leftMenuOpen, setLeftMenuOpen] = useState(false);
   const [achievmentsMenuOpen, setAchievmentsMenuOpen] = useState(false);
+  const [itemsMenuOpen, setItemsMenuOpen] = useState(false);
+  const [catsMenuOpen, setCatsMenuOpen] = useState(false);
   return (
     <>
       <h1 className="homeTitle">KittyClicker</h1>
@@ -67,8 +71,33 @@ function Home() {
       <Shop money={money} />
       <ClickCounter clicksNumber={clicks} />
       <MoneyCounter moneyNumber={money} />
-      <LeftMenu isOpen={leftMenuOpen} openAchievmentsMenu={() => setAchievmentsMenuOpen((open) => !open)} achievmentsOpen={achievmentsMenuOpen}/>
-      <AchievmentsMenu isOpen={achievmentsMenuOpen} close={() => setAchievmentsMenuOpen(false)}/>
+      <LeftMenu
+        isOpen={leftMenuOpen}
+        openAchievmentsMenu={() => {
+          setAchievmentsMenuOpen((open) => !open);
+          setItemsMenuOpen(false);
+          setCatsMenuOpen(false);
+        }}
+        achievmentsOpen={achievmentsMenuOpen}
+        openItemsMenu={() => {
+          setItemsMenuOpen((open) => !open);
+          setAchievmentsMenuOpen(false);
+          setCatsMenuOpen(false);
+        }}
+        itemsOpen={itemsMenuOpen}
+        openCatsMenu={() => {
+          setCatsMenuOpen((open) => !open);
+          setAchievmentsMenuOpen(false);
+          setItemsMenuOpen(false);
+        }}
+        catsOpen={catsMenuOpen}
+      />
+      <AchievmentsMenu
+        isOpen={achievmentsMenuOpen}
+        close={() => setAchievmentsMenuOpen(false)}
+      />
+      <ItemsMenu isOpen={itemsMenuOpen} close={() => setItemsMenuOpen(false)} />
+      <CatsMenu isOpen={catsMenuOpen} close={() => setCatsMenuOpen(false)} />
     </>
   );
 }
