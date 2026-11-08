@@ -6,6 +6,7 @@ import closeIcon from "../assets/close.svg";
 import { useState } from "react";
 import { FormatNumber } from "../utils/FormatNumber";
 import LeftMenu from "../components/LeftMenu";
+import AchievmentsMenu from "../components/AchievmentsMenu";
 
 function OpenLeftMenuButton({ onClick, isOpen }) {
   return (
@@ -55,6 +56,7 @@ function Home() {
   const [clicks, setClicks] = useState(111111100000000000);
   const [money, setMoney] = useState(2137);
   const [leftMenuOpen, setLeftMenuOpen] = useState(false);
+  const [achievmentsMenuOpen, setAchievmentsMenuOpen] = useState(false);
   return (
     <>
       <h1 className="homeTitle">KittyClicker</h1>
@@ -65,7 +67,8 @@ function Home() {
       <Shop money={money} />
       <ClickCounter clicksNumber={clicks} />
       <MoneyCounter moneyNumber={money} />
-      <LeftMenu isOpen={leftMenuOpen} onClose={() => setLeftMenuOpen(false)} />
+      <LeftMenu isOpen={leftMenuOpen} openAchievmentsMenu={() => setAchievmentsMenuOpen((open) => !open)} achievmentsOpen={achievmentsMenuOpen}/>
+      <AchievmentsMenu isOpen={achievmentsMenuOpen} close={() => setAchievmentsMenuOpen(false)}/>
     </>
   );
 }

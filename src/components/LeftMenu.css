@@ -19,6 +19,17 @@
   font-size: 30px;
   display: flex;
   align-items: center;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.leftMenu button:hover {
+  background-color: #fa99b8;
+  transform: scale(1.05);
+}
+
+.leftMenu button:active {
+  transform: scale(0.8);
 }
 
 .leftMenu img {
@@ -27,5 +38,9 @@
 }
 
 .leftMenu.open {
-    transform: translateX(0);
+  transform: translateX(0);
+}
+
+.leftMenu button.active, .leftMenu button.active:hover {
+  background-color: #f877a0;
 }

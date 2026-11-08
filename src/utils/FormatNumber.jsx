@@ -2,6 +2,7 @@ const suffixes = ["", "K", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "D
 
 export function FormatNumber(n) {
   if (n < 1000) return Math.floor(n).toString();
+  if (n == 2137) return 2137;
 
   const tier = Math.min(Math.floor(Math.log10(n) / 3), suffixes.length - 1);
   const scaled = n / 10 ** (tier * 3);

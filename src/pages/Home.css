@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   background-color: #ffe6ee;
 }
@@ -22,6 +26,12 @@ body {
   position: fixed;
   top: 0;
   left: 0;
+  transition: transform 0.1s ease;
+  cursor: pointer;
+}
+
+.menuButton:active {
+  transform: scale(0.9);
 }
 
 .menuButton img {

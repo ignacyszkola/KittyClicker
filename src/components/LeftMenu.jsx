@@ -4,10 +4,10 @@ import catIcon from "../assets/cat.svg";
 import inventoryIcon from "../assets/inventory.svg";
 import trophyIcon from "../assets/trophy.svg";
 
-function LeftMenu({isOpen, onClose}) {
+function LeftMenu({ isOpen, achievmentsOpen, openAchievmentsMenu }) {
   return (
     <div className={`leftMenu ${isOpen ? "open" : ""}`}>
-      <button className="achievmentsButton">
+      <button className={`achievmentsButton ${achievmentsOpen ? "active" : ""}`} onClick={openAchievmentsMenu}>
         <img src={trophyIcon} />
         Osiągnięcia
       </button>
