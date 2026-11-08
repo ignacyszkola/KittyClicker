@@ -21,6 +21,7 @@
   align-items: center;
   transition: transform 0.3s ease;
   cursor: pointer;
+  
 }
 
 .leftMenu button:hover {
@@ -44,4 +45,5 @@
 .leftMenu button.active,
 .leftMenu button.active:hover {
   background-color: #f877a0;
+  transform: scale(1.05);
 }

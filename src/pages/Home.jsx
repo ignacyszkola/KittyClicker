@@ -9,6 +9,7 @@ import LeftMenu from "../components/LeftMenu";
 import AchievmentsMenu from "../components/AchievmentsMenu";
 import ItemsMenu from "../components/ItemsMenu";
 import CatsMenu from "../components/CatsMenu";
+import AccountMenu from "../components/AccountMenu";
 
 function OpenLeftMenuButton({ onClick, isOpen }) {
   return (
@@ -61,6 +62,7 @@ function Home() {
   const [achievmentsMenuOpen, setAchievmentsMenuOpen] = useState(false);
   const [itemsMenuOpen, setItemsMenuOpen] = useState(false);
   const [catsMenuOpen, setCatsMenuOpen] = useState(false);
+  const [accountMenuOpen, setAccountMenuOpen] = useState(false);
   return (
     <>
       <h1 className="homeTitle">KittyClicker</h1>
@@ -77,20 +79,30 @@ function Home() {
           setAchievmentsMenuOpen((open) => !open);
           setItemsMenuOpen(false);
           setCatsMenuOpen(false);
+          setAccountMenuOpen(false);
         }}
         achievmentsOpen={achievmentsMenuOpen}
         openItemsMenu={() => {
           setItemsMenuOpen((open) => !open);
           setAchievmentsMenuOpen(false);
           setCatsMenuOpen(false);
+          setAccountMenuOpen(false);
         }}
         itemsOpen={itemsMenuOpen}
         openCatsMenu={() => {
           setCatsMenuOpen((open) => !open);
           setAchievmentsMenuOpen(false);
           setItemsMenuOpen(false);
+          setAccountMenuOpen(false);
         }}
         catsOpen={catsMenuOpen}
+        openAccountMenu={() => {
+          setAccountMenuOpen((open) => !open);
+          setAchievmentsMenuOpen(false);
+          setItemsMenuOpen(false);
+          setCatsMenuOpen(false);
+        }}
+        accountOpen={accountMenuOpen}
       />
       <AchievmentsMenu
         isOpen={achievmentsMenuOpen}
@@ -98,6 +110,10 @@ function Home() {
       />
       <ItemsMenu isOpen={itemsMenuOpen} close={() => setItemsMenuOpen(false)} />
       <CatsMenu isOpen={catsMenuOpen} close={() => setCatsMenuOpen(false)} />
+      <AccountMenu
+        isOpen={accountMenuOpen}
+        close={() => setAccountMenuOpen(false)}
+      />
     </>
   );
 }

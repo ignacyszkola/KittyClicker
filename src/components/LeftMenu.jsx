@@ -4,7 +4,7 @@ import catIcon from "../assets/cat.svg";
 import inventoryIcon from "../assets/inventory.svg";
 import trophyIcon from "../assets/trophy.svg";
 
-function LeftMenu({ isOpen, achievmentsOpen, openAchievmentsMenu, itemsOpen, openItemsMenu, catsOpen, openCatsMenu }) {
+function LeftMenu({ isOpen, achievmentsOpen, openAchievmentsMenu, itemsOpen, openItemsMenu, catsOpen, openCatsMenu, accountOpen, openAccountMenu }) {
   return (
     <div className={`leftMenu ${isOpen ? "open" : ""}`}>
       <button className={`achievmentsButton ${achievmentsOpen ? "active" : ""}`} onClick={openAchievmentsMenu}>
@@ -15,11 +15,11 @@ function LeftMenu({ isOpen, achievmentsOpen, openAchievmentsMenu, itemsOpen, ope
         <img src={inventoryIcon} />
         Itemy
       </button>
-      <button className={`catsButton ${itemsOpen ? "active" : ""}`} onClick={openCatsMenu}>
+      <button className={`catsButton ${catsOpen ? "active" : ""}`} onClick={openCatsMenu}>
         <img src={catIcon} />
         Kot
       </button>
-      <button className="accountButton">
+      <button className={`accountButton ${accountOpen ? "active" : ""}`} onClick={openAccountMenu}>
         <img src={accountIcon} />
         Konto
       </button>

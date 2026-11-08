@@ -1,0 +1,115 @@
+.accountMenu {
+  width: 1122px;
+  height: 704px;
+  border-radius: 25px;
+  border: white solid 6px;
+  background-color: #ef81ba;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    transform 0.25s ease,
+    opacity 0.25s ease;
+}
+
+.accountMenu.open {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+  pointer-events: all;
+}
+
+#accountMenuHeader {
+  font-family: "Pacifico";
+  text-align: center;
+  font-size: 55px;
+  color: white;
+  margin: 0;
+  font-weight: 2;
+}
+
+.closeButton {
+  background-color: #f369b0;
+  border-top-right-radius: 19px;
+  border: none;
+  height: 100px;
+  width: 100px;
+  float: right;
+  position: fixed;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+}
+
+.closeButton:hover {
+  background-color: #f356a7;
+}
+
+.closeButton img {
+  width: 80px;
+  height: 80px;
+}
+
+.accountDetails h2 {
+  font-family: "Pacifico";
+  font-size: 55px;
+  color: white;
+  font-weight: 2;
+}
+
+.accountDetails {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    padding-left: 180px;
+}
+
+.accountDetails label {
+    color: white;
+    font-family: arial;
+    font-size: 20px;
+}
+
+.accountDetails input {
+    border-radius: 12px;
+    border: #E5E7EB 2px solid;
+    width: 500px;
+    height: 50px;
+    font-size: 20px;
+}
+
+.accountDetails button {
+    background-color: #ef81ba;
+    border: none;
+}
+
+.passwordRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.showButton {
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.showButton img {
+  width: 40px;
+  height: 40px;
+  border-radius: 25px;
+  transition: background-color 0.3s ease;
+  transition: transform 0.3s ease;
+}
+
+.showButton img:active {
+    transform: scale(0.8);
+}
+
+.showButton img:hover {
+    background-color: rgba(199, 194, 194, 0.4);
+}

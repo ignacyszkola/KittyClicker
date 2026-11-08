@@ -10,6 +10,8 @@ body {
   margin: 0;
   -webkit-text-stroke: 3px black;
   paint-order: stroke fill;
+  font-weight: 2;
+  text-shadow: black 5px 5px;
 }
 
 .menuButton {
@@ -42,6 +44,7 @@ body {
   position: fixed;
   top: 0px;
   right: 0px;
+  border-left: white solid 3px;
 }
 
 .shop h2 {
@@ -50,11 +53,14 @@ body {
   color: white;
   font-size: 55px;
   margin: 0;
+  font-weight: 2;
+  text-shadow: black 3px 3px 4px;
 }
 
 .shopHeaderButtons {
   display: flex;
   margin-top: 5px;
+  
 }
 
 .shopHeaderButtons button {
@@ -67,6 +73,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  
 }
 
 #shopCatButton {
