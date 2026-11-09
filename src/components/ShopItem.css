@@ -1,0 +1,34 @@
+.shopItem {
+    height: auto;
+    background-color: #FA94B5;
+    border: none;
+    border-bottom: white solid 2px;
+    font-family: "Pacifico";
+    color: white;
+    font-weight: 2px;
+    cursor: pointer;
+    align-items: center;
+    font-size: 30px;
+}
+
+.shopItemCost {
+    color: #59FF00;
+    font-family: Arial;
+    font-size: 25px;
+}
+
+.shopItemCost img {
+    height: 30px;
+    width: 30px;
+    margin-bottom: -5px;
+    padding-right: 5px;
+}
+
+.shopItem:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.shopItem:hover {
+    background-color: #f877a0;
+}

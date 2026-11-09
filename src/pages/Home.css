@@ -73,14 +73,23 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-#shopCatButton {
-  color: #1eff00;
-}
-
-#shopUpgradeButton {
   color: white;
+  transition: background-color 0.3s;
+}
+
+.shopHeaderButtons button.active {
+  background-color: #f7316f;
+}
+
+.shopContent {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  height: 930px;
+}
+
+.shopContent::-webkit-scrollbar {
+  display: none;
 }
 
 .clickCounter {
