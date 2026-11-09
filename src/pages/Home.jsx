@@ -10,6 +10,15 @@ import AchievmentsMenu from "../components/AchievmentsMenu";
 import ItemsMenu from "../components/ItemsMenu";
 import CatsMenu from "../components/CatsMenu";
 import AccountMenu from "../components/AccountMenu";
+import cat from "../assets/cat.png"
+
+function CatButton({onClick}){
+  return (
+    <button className="catButton" onClick={onClick}>
+      <img src={cat} draggable="false" />
+    </button>
+  );
+}
 
 function OpenLeftMenuButton({ onClick, isOpen }) {
   return (
@@ -56,13 +65,25 @@ function MoneyCounter({ moneyNumber }) {
 }
 
 function Home() {
-  const [clicks, setClicks] = useState(111111100000000000);
-  const [money, setMoney] = useState(2137);
+  const [clicks, setClicks] = useState(0);
+  const [money, setMoney] = useState(0);
   const [leftMenuOpen, setLeftMenuOpen] = useState(false);
   const [achievmentsMenuOpen, setAchievmentsMenuOpen] = useState(false);
   const [itemsMenuOpen, setItemsMenuOpen] = useState(false);
   const [catsMenuOpen, setCatsMenuOpen] = useState(false);
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
+
+  const dropChance = 0.25;
+  const clickPower = 1;
+
+  function handleClick(){
+    setClicks((c) => c + clickPower);
+
+    if(Math.random() < dropChance){
+      setMoney((m) => m + 1);
+    }
+  }
+
   return (
     <>
       <h1 className="homeTitle">KittyClicker</h1>
@@ -71,6 +92,7 @@ function Home() {
         onClick={() => setLeftMenuOpen((open) => !open)}
       />
       <Shop money={money} />
+      <CatButton onClick={handleClick}/>
       <ClickCounter clicksNumber={clicks} />
       <MoneyCounter moneyNumber={money} />
       <LeftMenu
