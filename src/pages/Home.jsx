@@ -21,7 +21,7 @@ function PlaySound(type) {
     click: clickSound,
   };
   const sound = new Audio(sounds[type]);
-  sound.volume = 0.15;
+  sound.volume = 0.1;
   sound.play();
 }
 
@@ -147,7 +147,7 @@ function MoneyCounter({ moneyNumber }) {
 
 function Home() {
   const [clicks, setClicks] = useState(0);
-  const [money, setMoney] = useState(10000);
+  const [money, setMoney] = useState(40000);
   const [leftMenu, setleftMenu] = useState(false);
   const [achievmentsMenu, setachievmentsMenu] = useState(false);
   const [itemsMenu, setitemsMenu] = useState(false);
@@ -159,12 +159,10 @@ function Home() {
   const popupId = useRef(0);
 
   const clickPower = 1 * UpgradeValue("multiCat", "clickMulti");
-  const moneyDropChance =
-    0.25 * UpgradeValue("moneyDropChanceCat", "moneyDropChanceMulti");
+  const moneyDropChance = UpgradeValue("moneyDropChanceCat", "moneyDropChance", 0.25);
   const moneyMulti = 1 * UpgradeValue("moneyMultiCat", "moneyMulti");
-  const critClickPower = 4 * UpgradeValue("critMultiCat", "critMulti");
-  const critChance =
-    0.05 * UpgradeValue("critChanceMultiCat", "critChanceMulti");
+  const critClickPower = UpgradeValue("critMultiCat", "critMulti", 2);
+  const critChance = UpgradeValue("critChanceMultiCat", "critChanceMulti", 0.05);
 
   function addPopups(items) {
     const created = items.map((item) => ({
@@ -182,15 +180,15 @@ function Home() {
     }, 900);
   }
 
-  function UpgradeValue(catId, key) {
+  function UpgradeValue(catId, key, base = 1) {
     const cat = cats.find((c) => c.id === catId);
-    if (!ownedCats[catId]) return 1;
+    if (!ownedCats[catId]) return base;
 
     const level = ownedUpgrades[catId] || 0;
-    if (level === 0) return cat[key] ?? 1;
+    if (level === 0) return cat[key] ?? base;
 
     const upgrade = upgrades.filter((u) => u.catId === catId)[level - 1];
-    return upgrade[key] ?? 1;
+    return upgrade[key] ?? base;
   }
 
   function BuyCat(cat) {
@@ -217,7 +215,14 @@ function Home() {
 
     for (let i = 0; i < Math.floor(clickPower); i++) {
       if (Math.random() < moneyDropChance) moneyGain += moneyMulti;
-      if (Math.random() < critChance) critGain += critClickPower;
+    }
+
+    if (Math.random() < critChance) critGain += clickPower * critClickPower;
+
+    if (critGain > 0) {
+      for (let i = 0; i < Math.floor(critGain); i++) {
+        if (Math.random() < moneyDropChance) moneyGain += moneyMulti;
+      }
     }
 
     setClicks((c) => c + clickPower + critGain);
@@ -234,9 +239,7 @@ function Home() {
     const upgradesList = upgrades.filter((u) => u.catId === "clickCat");
 
     return (
-      upgradesList[level - 1]?.[key] ??
-      cats.find((c) => c.id === "clickCat")?.[key] ??
-      0
+      upgradesList[level - 1]?.[key] ?? cats.find((c) => c.id === "clickCat")?.[key] ?? 0
     );
   }
 
@@ -251,8 +254,19 @@ function Home() {
     const critClickPower = GetClickCatStat("critClickPower");
 
     const id = setInterval(() => {
-      const moneyGain = Math.random() < moneyDropChance ? moneyDropAmount : 0;
-      const critGain = Math.random() < critChance ? critClickPower : 0;
+      let moneyGain = 0;
+      let critGain = 0;
+      for (let i = 0; i < Math.floor(clickPower); i++) {
+        if (Math.random() < moneyDropChance) moneyGain += moneyDropAmount;
+      }
+      
+      if (Math.random() < critChance) critGain += clickPower * critClickPower;
+
+      if (critGain > 0) {
+        for (let i = 0; i < Math.floor(critGain); i++) {
+          if (Math.random() < moneyDropChance) moneyGain += moneyDropAmount;
+        }
+      }
 
       setClicks((c) => c + clickPower + critGain);
       if (moneyGain > 0) setMoney((m) => m + moneyGain);
