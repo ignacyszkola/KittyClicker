@@ -46,32 +46,56 @@ function OpenLeftMenuButton({ onClick, isOpen }) {
   );
 }
 
-function Shop({ money, owned, buy }) {
+function Shop({ money, ownedCats, ownedUpgrades, buyCat, buyUpgrade }) {
   const [shopPage, setShopPage] = useState("cats");
-  const list = shopPage === "cats" ? cats : upgrades;
   return (
     <div className="shop">
       <h2>Sklep</h2>
       <div className="shopHeaderButtons">
-        <button className={shopPage === "cats" ? "active" : ""} onClick={() => setShopPage("cats")}>
+        <button
+          className={shopPage === "cats" ? "active" : ""}
+          onClick={() => setShopPage("cats")}
+        >
           Koty
         </button>
-        <button className={shopPage === "upgrades" ? "active" : ""} onClick={() => setShopPage("upgrades")}>
+        <button
+          className={shopPage === "upgrades" ? "active" : ""}
+          onClick={() => setShopPage("upgrades")}
+        >
           Ulepszenia
         </button>
       </div>
       <div className="shopContent">
-        {list.map((item) => {
-          return (
-            <ShopItem
-              key={item.id}
-              name={item.name}
-              cost={item.cost}
-              canAfford={money >= item.cost}
-              buy={() => buy(item, item.cost)}
-            />
-          );
-        })}
+        {shopPage === "cats" &&
+          cats
+            .filter((cat) => !ownedCats[cat.id])
+            .map((cat) => (
+              <ShopItem
+                key={cat.id}
+                name={cat.name}
+                cost={cat.cost}
+                canAfford={money >= cat.cost}
+                buy={() => buyCat(cat)}
+              />
+            ))}
+
+        {shopPage === "upgrades" &&
+          cats
+            .filter((cat) => ownedCats[cat.id])
+            .map((cat) => {
+              const level = ownedUpgrades[cat.id] || 0;
+              return upgrades.filter((u) => u.catId === cat.id)[level];
+            })
+            .filter(Boolean)
+            .map((upgrade) => (
+              <ShopItem
+                key={upgrade.id}
+                name={`${upgrade.catName} - ${upgrade.name}`}
+                cost={upgrade.cost}
+                canAfford={money >= upgrade.cost}
+                buy={() => buyUpgrade(upgrade)}
+              />
+            ))}
       </div>
     </div>
   );
@@ -97,7 +121,7 @@ function MoneyCounter({ moneyNumber }) {
 
 function Home() {
   const [clicks, setClicks] = useState(0);
-  const [money, setMoney] = useState(100);
+  const [money, setMoney] = useState(1000);
   const [leftMenuOpen, setLeftMenuOpen] = useState(false);
   const [achievmentsMenuOpen, setAchievmentsMenuOpen] = useState(false);
   const [itemsMenuOpen, setItemsMenuOpen] = useState(false);
@@ -107,19 +131,32 @@ function Home() {
   const dropChance = 0.25;
   const clickPower = 1;
 
-  const [owned, setOwned] = useState({});
+  const [ownedCats, setOwnedCats] = useState({});
+  const [ownedUpgrades, setOwnedUpgrades] = useState({});
 
-  function BuyItem(item, cost) {
-    if (money < cost) return;
-    setMoney((m) => m - cost);
-    setOwned((o) => ({ ...o, [item.id]: o[item.id] ? false : true }));
+  function BuyCat(cat) {
+    if (ownedCats[cat.id] || money < cat.cost) return;
+    setMoney((m) => m - cat.cost);
+    setOwnedCats((o) => ({ ...o, [cat.id]: true }));
+  }
+
+  function BuyUpgrade(upgrade) {
+    const level = ownedUpgrades[upgrade.catId] || 0;
+    const next = upgrades.filter((u) => u.catId === upgrade.catId)[level];
+    if (!next || next.id !== upgrade.id) return;
+    if (ownedUpgrades[upgrade.id] || money < upgrade.baseCost) return;
+    if (!ownedCats[upgrade.catId]) return;
+    setMoney((m) => m - upgrade.cost);
+    setOwnedUpgrades((l) => ({ ...l, [upgrade.catId]: level + 1 }));
   }
 
   function handleClick() {
     setClicks((c) => c + clickPower);
 
-    if (Math.random() < dropChance) {
-      setMoney((m) => m + 1);
+    for (let i = 0; i < clickPower; i++) {
+      if (Math.random() < dropChance) {
+        setMoney((m) => m + 1);
+      }
     }
   }
 
@@ -130,7 +167,13 @@ function Home() {
         isOpen={leftMenuOpen}
         onClick={() => setLeftMenuOpen((open) => !open)}
       />
-      <Shop money={money} owned={owned} buy={BuyItem} />
+      <Shop
+        money={money}
+        ownedCats={ownedCats}
+        ownedUpgrades={ownedUpgrades}
+        buyCat={BuyCat}
+        buyUpgrade={BuyUpgrade}
+      />
       <CatButton onClick={handleClick} />
       <ClickCounter clicksNumber={clicks} />
       <MoneyCounter moneyNumber={money} />
