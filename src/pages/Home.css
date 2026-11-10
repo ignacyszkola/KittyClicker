@@ -167,3 +167,14 @@ body {
 .catButton:active {
   transform: translate(-50%, -50%) scale(0.92);
 }
+
+.clickCat {
+  position: fixed;
+  top: 50px;
+  right: 430px;
+}
+
+.clickCat img {
+  width: 290.5px;
+  height: 178.5px;
+}

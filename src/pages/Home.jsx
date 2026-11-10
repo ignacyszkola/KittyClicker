@@ -14,6 +14,7 @@ import cat from "../assets/cat.png";
 import { cats, upgrades } from "../utils/ShopData";
 import ShopItem from "../components/ShopItem";
 import clickSound from "../assets/clickSound.mp3";
+import clickCat from "../assets/clickCat.webp";
 
 function PlaySound(type) {
   const sounds = {
@@ -22,6 +23,15 @@ function PlaySound(type) {
   const sound = new Audio(sounds[type]);
   sound.volume = 0.15;
   sound.play();
+}
+
+function ClickCat({ ownedCats }) {
+  if (!ownedCats.clickCat) return null;
+  return (
+    <div className="clickCat">
+      <img src={clickCat} />
+    </div>
+  );
 }
 
 function CatButton({ onClick }) {
@@ -121,7 +131,7 @@ function MoneyCounter({ moneyNumber }) {
 
 function Home() {
   const [clicks, setClicks] = useState(0);
-  const [money, setMoney] = useState(0);
+  const [money, setMoney] = useState(100);
   const [leftMenuOpen, setLeftMenuOpen] = useState(false);
   const [achievmentsMenuOpen, setAchievmentsMenuOpen] = useState(false);
   const [itemsMenuOpen, setItemsMenuOpen] = useState(false);
@@ -131,7 +141,8 @@ function Home() {
   const [ownedUpgrades, setOwnedUpgrades] = useState({});
 
   const clickPower = 1 * GetValue("multiCat", "clickMulti");
-  const moneyDropChance = 0.25 * GetValue("moneyDropChanceCat", "moneyDropChanceMulti");
+  const moneyDropChance =
+    0.25 * GetValue("moneyDropChanceCat", "moneyDropChanceMulti");
   const moneyMulti = 1 * GetValue("moneyMultiCat", "moneyMulti");
   const critClickPower = 4 * GetValue("critMultiCat", "critMulti");
   const crictChance = 0.025 * GetValue("critChanceMultiCat", "critChanceMulti");
@@ -156,9 +167,11 @@ function Home() {
   function BuyUpgrade(upgrade) {
     const level = ownedUpgrades[upgrade.catId] || 0;
     const next = upgrades.filter((u) => u.catId === upgrade.catId)[level];
+
     if (!next || next.id !== upgrade.id) return;
-    if (ownedUpgrades[upgrade.id] || money < upgrade.baseCost) return;
     if (!ownedCats[upgrade.catId]) return;
+    if (money < upgrade.cost) return;
+
     setMoney((m) => m - upgrade.cost);
     setOwnedUpgrades((l) => ({ ...l, [upgrade.catId]: level + 1 }));
   }
@@ -166,12 +179,12 @@ function Home() {
   function handleClick() {
     setClicks((c) => c + clickPower);
 
-    for (let i = 0; i < clickPower; i++) {
+    for (let i = 0; i < Math.floor(clickPower); i++) {
       if (Math.random() < moneyDropChance) {
         setMoney((m) => m + moneyMulti);
       }
-      if(Math.random() < crictChance){
-        setClicks((c) => c+ critClickPower)
+      if (Math.random() < crictChance) {
+        setClicks((c) => c + critClickPower);
       }
     }
   }
@@ -191,6 +204,7 @@ function Home() {
         buyUpgrade={BuyUpgrade}
       />
       <CatButton onClick={handleClick} />
+      <ClickCat ownedCats={ownedCats} />
       <ClickCounter clicksNumber={clicks} />
       <MoneyCounter moneyNumber={money} />
       <LeftMenu
