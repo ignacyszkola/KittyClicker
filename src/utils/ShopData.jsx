@@ -53,7 +53,7 @@ export const upgrades = [
   {id: "critMultiCat3", catId: "critMultiCat", name: "Level 3", catName: "Kot mnożący krytyczne klik", critMulti: 3.5, cost: 25000 },
   {id: "critChanceMultiCat1", catId: "critChanceMultiCat", name: "Level 1", catName: "Kot mnożący szansę krytyczne klik", critChanceMulti: 2, cost: 10000 },
   {id: "critChanceMultiCat2", catId: "critChanceMultiCat", name: "Level 2", catName: "Kot mnożący szansę krytyczne klik", critChanceMulti: 2.5, cost: 20000 },
-  {id: "critChanceMultiCat3", catId: "critChanceMultiCat", name: "Level 3", catName: "Kot mnożący szansę krytyczne klik", critChanceMulti: 4, cost: 50000 },
+  {id: "critChanceMultiCat3", catId: "critChanceMultiCat", name: "Level 3", catName: "Kot mnożący szansę krytyczne klik", critChanceMulti: 3.5, cost: 50000 },
   {id: "moneyDropChanceCat1", catId: "moneyDropChanceCat", name: "Level 1", catName: "Kot mnożący szansę na drop waluty", moneyDropChanceMulti: 1.5, cost: 25000 },
   {id: "moneyDropChanceCat2", catId: "moneyDropChanceCat", name: "Level 2", catName: "Kot mnożący szansę na drop waluty", moneyDropChanceMulti: 2, cost: 50000 },
   {id: "moneyDropChanceCat3", catId: "moneyDropChanceCat", name: "Level 3", catName: "Kot mnożący szansę na drop waluty", moneyDropChanceMulti: 4, cost: 100000 },

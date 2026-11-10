@@ -3,7 +3,7 @@ import menuIcon from "../assets/menu.svg";
 import cursorIcon from "../assets/cursor.png";
 import catFoodIcon from "../assets/cat-food.png";
 import closeIcon from "../assets/close.svg";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { FormatNumber } from "../utils/FormatNumber";
 import LeftMenu from "../components/LeftMenu";
 import AchievmentsMenu from "../components/AchievmentsMenu";
@@ -45,6 +45,22 @@ function CatButton({ onClick }) {
     >
       <img src={cat} draggable="false" />
     </button>
+  );
+}
+
+function ClickPopups({ popups }) {
+  return (
+    <div className="popupLayer">
+      {popups.map((p) => (
+        <span
+          key={p.id}
+          className={`popup ${p.type}`}
+          style={{ "--x": `${p.x}px`, "--y": `${p.y}px` }}
+        >
+          {p.text}
+        </span>
+      ))}
+    </div>
   );
 }
 
@@ -129,9 +145,13 @@ function MoneyCounter({ moneyNumber }) {
   );
 }
 
+function FormatGain(n) {
+  return n < 1000 ? Number(n.toFixed(1)).toString() : FormatNumber(n);
+}
+
 function Home() {
   const [clicks, setClicks] = useState(0);
-  const [money, setMoney] = useState(100);
+  const [money, setMoney] = useState(1000000000);
   const [leftMenuOpen, setLeftMenuOpen] = useState(false);
   const [achievmentsMenuOpen, setAchievmentsMenuOpen] = useState(false);
   const [itemsMenuOpen, setItemsMenuOpen] = useState(false);
@@ -140,12 +160,31 @@ function Home() {
   const [ownedCats, setOwnedCats] = useState({});
   const [ownedUpgrades, setOwnedUpgrades] = useState({});
 
+  const [popups, setPopups] = useState([]);
+  const popupId = useRef(0);
+
   const clickPower = 1 * GetValue("multiCat", "clickMulti");
   const moneyDropChance =
     0.25 * GetValue("moneyDropChanceCat", "moneyDropChanceMulti");
   const moneyMulti = 1 * GetValue("moneyMultiCat", "moneyMulti");
   const critClickPower = 4 * GetValue("critMultiCat", "critMulti");
-  const crictChance = 0.025 * GetValue("critChanceMultiCat", "critChanceMulti");
+  const crictChance = 0.05 * GetValue("critChanceMultiCat", "critChanceMulti");
+
+  function addPopups(items) {
+    const created = items.map((item) => ({
+      ...item,
+      id: popupId.current++,
+      x: Math.round(Math.random() * 360 - 130),
+      y: Math.round(Math.random() * 500 - 180),
+    }));
+
+    setPopups((list) => [...list, ...created].slice(-30));
+
+    setTimeout(() => {
+      const ids = created.map((p) => p.id);
+      setPopups((list) => list.filter((p) => !ids.includes(p.id)));
+    }, 900);
+  }
 
   function GetValue(catId, key) {
     const cat = cats.find((c) => c.id === catId);
@@ -177,16 +216,24 @@ function Home() {
   }
 
   function handleClick() {
-    setClicks((c) => c + clickPower);
+    let moneyGain = 0;
+    let critGain = 0;
 
     for (let i = 0; i < Math.floor(clickPower); i++) {
-      if (Math.random() < moneyDropChance) {
-        setMoney((m) => m + moneyMulti);
-      }
-      if (Math.random() < crictChance) {
-        setClicks((c) => c + critClickPower);
-      }
+      if (Math.random() < moneyDropChance) moneyGain += moneyMulti;
+      if (Math.random() < crictChance) critGain += critClickPower;
     }
+
+    setClicks((c) => c + clickPower + critGain);
+    if (moneyGain > 0) setMoney((m) => m + moneyGain);
+
+    const items = [{ type: "click", text: `+${FormatGain(clickPower)}` }];
+    if (moneyGain > 0)
+      items.push({ type: "money", text: `+${FormatGain(moneyGain)}` });
+    if (critGain > 0)
+      items.push({ type: "crit", text: `CRIT +${FormatGain(critGain)}` });
+
+    addPopups(items);
   }
 
   return (
@@ -204,6 +251,7 @@ function Home() {
         buyUpgrade={BuyUpgrade}
       />
       <CatButton onClick={handleClick} />
+      <ClickPopups popups={popups} />
       <ClickCat ownedCats={ownedCats} />
       <ClickCounter clicksNumber={clicks} />
       <MoneyCounter moneyNumber={money} />

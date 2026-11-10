@@ -178,3 +178,50 @@ body {
   width: 290.5px;
   height: 178.5px;
 }
+
+.popupLayer {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  z-index: 40;
+}
+
+.popup {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  white-space: nowrap;
+  font-family: "Pacifico";
+  font-size: 36px;
+  color: white;
+  -webkit-text-stroke: 3px #2b1d2b;
+  paint-order: stroke fill;
+  animation: popupFloat 0.9s ease-out forwards;
+}
+
+.popup.money {
+  color: #fde456;
+}
+
+.popup.crit {
+  color: #ff4d4d;
+  font-size: 50px;
+}
+
+@keyframes popupFloat {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+  15% {
+    opacity: 1;
+    transform: translate(-50%, -60%) scale(1.15);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -160%) scale(1);
+  }
+}
