@@ -3,7 +3,7 @@ import menuIcon from "../assets/menu.svg";
 import cursorIcon from "../assets/cursor.png";
 import catFoodIcon from "../assets/cat-food.png";
 import closeIcon from "../assets/close.svg";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { FormatNumber } from "../utils/FormatNumber";
 import LeftMenu from "../components/LeftMenu";
 import AchievmentsMenu from "../components/AchievmentsMenu";
@@ -34,10 +34,10 @@ function ClickCat({ ownedCats }) {
   );
 }
 
-function CatButton({ onClick }) {
+function CatBtn({ onClick }) {
   return (
     <button
-      className="catButton"
+      className="catBtn"
       onClick={() => {
         onClick();
         PlaySound("click");
@@ -64,7 +64,7 @@ function ClickPopups({ popups }) {
   );
 }
 
-function OpenLeftMenuButton({ onClick, isOpen }) {
+function OpenLftMenuBtn({ onClick, isOpen }) {
   return (
     <button className="menuButton" onClick={onClick}>
       <img src={isOpen ? closeIcon : menuIcon} />
@@ -145,30 +145,26 @@ function MoneyCounter({ moneyNumber }) {
   );
 }
 
-function FormatGain(n) {
-  return n < 1000 ? Number(n.toFixed(1)).toString() : FormatNumber(n);
-}
-
 function Home() {
   const [clicks, setClicks] = useState(0);
-  const [money, setMoney] = useState(1000000000);
-  const [leftMenuOpen, setLeftMenuOpen] = useState(false);
-  const [achievmentsMenuOpen, setAchievmentsMenuOpen] = useState(false);
-  const [itemsMenuOpen, setItemsMenuOpen] = useState(false);
-  const [catsMenuOpen, setCatsMenuOpen] = useState(false);
-  const [accountMenuOpen, setAccountMenuOpen] = useState(false);
+  const [money, setMoney] = useState(10000);
+  const [leftMenu, setleftMenu] = useState(false);
+  const [achievmentsMenu, setachievmentsMenu] = useState(false);
+  const [itemsMenu, setitemsMenu] = useState(false);
+  const [catsMenu, setcatsMenu] = useState(false);
+  const [accountMenu, setaccountMenu] = useState(false);
   const [ownedCats, setOwnedCats] = useState({});
   const [ownedUpgrades, setOwnedUpgrades] = useState({});
-
   const [popups, setPopups] = useState([]);
   const popupId = useRef(0);
 
-  const clickPower = 1 * GetValue("multiCat", "clickMulti");
+  const clickPower = 1 * UpgradeValue("multiCat", "clickMulti");
   const moneyDropChance =
-    0.25 * GetValue("moneyDropChanceCat", "moneyDropChanceMulti");
-  const moneyMulti = 1 * GetValue("moneyMultiCat", "moneyMulti");
-  const critClickPower = 4 * GetValue("critMultiCat", "critMulti");
-  const crictChance = 0.05 * GetValue("critChanceMultiCat", "critChanceMulti");
+    0.25 * UpgradeValue("moneyDropChanceCat", "moneyDropChanceMulti");
+  const moneyMulti = 1 * UpgradeValue("moneyMultiCat", "moneyMulti");
+  const critClickPower = 4 * UpgradeValue("critMultiCat", "critMulti");
+  const critChance =
+    0.05 * UpgradeValue("critChanceMultiCat", "critChanceMulti");
 
   function addPopups(items) {
     const created = items.map((item) => ({
@@ -178,7 +174,7 @@ function Home() {
       y: Math.round(Math.random() * 500 - 180),
     }));
 
-    setPopups((list) => [...list, ...created].slice(-30));
+    setPopups((list) => [...list, ...created]);
 
     setTimeout(() => {
       const ids = created.map((p) => p.id);
@@ -186,7 +182,7 @@ function Home() {
     }, 900);
   }
 
-  function GetValue(catId, key) {
+  function UpgradeValue(catId, key) {
     const cat = cats.find((c) => c.id === catId);
     if (!ownedCats[catId]) return 1;
 
@@ -215,33 +211,67 @@ function Home() {
     setOwnedUpgrades((l) => ({ ...l, [upgrade.catId]: level + 1 }));
   }
 
-  function handleClick() {
+  function Click() {
     let moneyGain = 0;
     let critGain = 0;
 
     for (let i = 0; i < Math.floor(clickPower); i++) {
       if (Math.random() < moneyDropChance) moneyGain += moneyMulti;
-      if (Math.random() < crictChance) critGain += critClickPower;
+      if (Math.random() < critChance) critGain += critClickPower;
     }
 
     setClicks((c) => c + clickPower + critGain);
     if (moneyGain > 0) setMoney((m) => m + moneyGain);
 
-    const items = [{ type: "click", text: `+${FormatGain(clickPower)}` }];
-    if (moneyGain > 0)
-      items.push({ type: "money", text: `+${FormatGain(moneyGain)}` });
-    if (critGain > 0)
-      items.push({ type: "crit", text: `CRIT +${FormatGain(critGain)}` });
-
+    const items = [{ type: "click", text: `+${clickPower}` }];
+    if (moneyGain > 0) items.push({ type: "money", text: `+${moneyGain}` });
+    if (critGain > 0) items.push({ type: "crit", text: `CRIT +${critGain}` });
     addPopups(items);
   }
+
+  function GetClickCatStat(key) {
+    const level = ownedUpgrades.clickCat || 0;
+    const upgradesList = upgrades.filter((u) => u.catId === "clickCat");
+
+    return (
+      upgradesList[level - 1]?.[key] ??
+      cats.find((c) => c.id === "clickCat")?.[key] ??
+      0
+    );
+  }
+
+  useEffect(() => {
+    if (!ownedCats.clickCat) return;
+
+    const clickPower = GetClickCatStat("clickPower");
+    const clickSpeed = GetClickCatStat("clickSpeed");
+    const moneyDropChance = GetClickCatStat("moneyDropChance");
+    const moneyDropAmount = GetClickCatStat("moneyMulti");
+    const critChance = GetClickCatStat("critChance");
+    const critClickPower = GetClickCatStat("critClickPower");
+
+    const id = setInterval(() => {
+      const moneyGain = Math.random() < moneyDropChance ? moneyDropAmount : 0;
+      const critGain = Math.random() < critChance ? critClickPower : 0;
+
+      setClicks((c) => c + clickPower + critGain);
+      if (moneyGain > 0) setMoney((m) => m + moneyGain);
+
+      const items = [{ type: "click", text: `+${clickPower}` }];
+      if (moneyGain > 0) items.push({ type: "money", text: `+${moneyGain}` });
+      if (critGain > 0) items.push({ type: "crit", text: `CRIT +${critGain}` });
+      addPopups(items);
+    }, 1000 / clickSpeed);
+
+    return () => clearInterval(id);
+  }, [ownedCats.clickCat, ownedUpgrades.clickCat]);
 
   return (
     <>
       <h1 className="homeTitle">KittyClicker</h1>
-      <OpenLeftMenuButton
-        isOpen={leftMenuOpen}
-        onClick={() => setLeftMenuOpen((open) => !open)}
+      <OpenLftMenuBtn
+        isOpen={leftMenu}
+        onClick={() => setleftMenu((open) => !open)}
       />
       <Shop
         money={money}
@@ -250,52 +280,49 @@ function Home() {
         buyCat={BuyCat}
         buyUpgrade={BuyUpgrade}
       />
-      <CatButton onClick={handleClick} />
+      <CatBtn onClick={Click} />
       <ClickPopups popups={popups} />
       <ClickCat ownedCats={ownedCats} />
       <ClickCounter clicksNumber={clicks} />
       <MoneyCounter moneyNumber={money} />
       <LeftMenu
-        isOpen={leftMenuOpen}
+        isOpen={leftMenu}
         openAchievmentsMenu={() => {
-          setAchievmentsMenuOpen((open) => !open);
-          setItemsMenuOpen(false);
-          setCatsMenuOpen(false);
-          setAccountMenuOpen(false);
+          setachievmentsMenu((open) => !open);
+          setitemsMenu(false);
+          setcatsMenu(false);
+          setaccountMenu(false);
         }}
-        achievmentsOpen={achievmentsMenuOpen}
+        achievmentsOpen={achievmentsMenu}
         openItemsMenu={() => {
-          setItemsMenuOpen((open) => !open);
-          setAchievmentsMenuOpen(false);
-          setCatsMenuOpen(false);
-          setAccountMenuOpen(false);
+          setitemsMenu((open) => !open);
+          setachievmentsMenu(false);
+          setcatsMenu(false);
+          setaccountMenu(false);
         }}
-        itemsOpen={itemsMenuOpen}
+        itemsOpen={itemsMenu}
         openCatsMenu={() => {
-          setCatsMenuOpen((open) => !open);
-          setAchievmentsMenuOpen(false);
-          setItemsMenuOpen(false);
-          setAccountMenuOpen(false);
+          setcatsMenu((open) => !open);
+          setachievmentsMenu(false);
+          setitemsMenu(false);
+          setaccountMenu(false);
         }}
-        catsOpen={catsMenuOpen}
+        catsOpen={catsMenu}
         openAccountMenu={() => {
-          setAccountMenuOpen((open) => !open);
-          setAchievmentsMenuOpen(false);
-          setItemsMenuOpen(false);
-          setCatsMenuOpen(false);
+          setaccountMenu((open) => !open);
+          setachievmentsMenu(false);
+          setitemsMenu(false);
+          setcatsMenu(false);
         }}
-        accountOpen={accountMenuOpen}
+        accountOpen={accountMenu}
       />
       <AchievmentsMenu
-        isOpen={achievmentsMenuOpen}
-        close={() => setAchievmentsMenuOpen(false)}
+        isOpen={achievmentsMenu}
+        close={() => setachievmentsMenu(false)}
       />
-      <ItemsMenu isOpen={itemsMenuOpen} close={() => setItemsMenuOpen(false)} />
-      <CatsMenu isOpen={catsMenuOpen} close={() => setCatsMenuOpen(false)} />
-      <AccountMenu
-        isOpen={accountMenuOpen}
-        close={() => setAccountMenuOpen(false)}
-      />
+      <ItemsMenu isOpen={itemsMenu} close={() => setitemsMenu(false)} />
+      <CatsMenu isOpen={catsMenu} close={() => setcatsMenu(false)} />
+      <AccountMenu isOpen={accountMenu} close={() => setaccountMenu(false)} />
     </>
   );
 }

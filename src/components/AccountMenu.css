@@ -13,6 +13,7 @@
   transition:
     transform 0.25s ease,
     opacity 0.25s ease;
+  z-index: 50;
 }
 
 .accountMenu.open {
@@ -60,29 +61,29 @@
 }
 
 .accountDetails {
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    padding-left: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  padding-left: 180px;
 }
 
 .accountDetails label {
-    color: white;
-    font-family: arial;
-    font-size: 20px;
+  color: white;
+  font-family: arial;
+  font-size: 20px;
 }
 
 .accountDetails input {
-    border-radius: 12px;
-    border: #E5E7EB 2px solid;
-    width: 500px;
-    height: 50px;
-    font-size: 20px;
+  border-radius: 12px;
+  border: #e5e7eb 2px solid;
+  width: 500px;
+  height: 50px;
+  font-size: 20px;
 }
 
 .accountDetails button {
-    background-color: #ef81ba;
-    border: none;
+  background-color: #ef81ba;
+  border: none;
 }
 
 .passwordRow {
@@ -107,9 +108,9 @@
 }
 
 .showButton img:active {
-    transform: scale(0.8);
+  transform: scale(0.8);
 }
 
 .showButton img:hover {
-    background-color: rgba(199, 194, 194, 0.4);
+  background-color: rgba(199, 194, 194, 0.4);
 }

@@ -11,13 +11,13 @@
     font-size: 30px;
 }
 
-.shopItemCost {
+.cost {
     color: #59FF00;
     font-family: Arial;
     font-size: 25px;
 }
 
-.shopItemCost img {
+.cost img {
     height: 30px;
     width: 30px;
     margin-bottom: -5px;

@@ -13,6 +13,7 @@
   transition:
     transform 0.25s ease,
     opacity 0.25s ease;
+  z-index: 50;
 }
 
 .achievmentsMenu.open {
