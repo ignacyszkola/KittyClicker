@@ -121,18 +121,31 @@ function MoneyCounter({ moneyNumber }) {
 
 function Home() {
   const [clicks, setClicks] = useState(0);
-  const [money, setMoney] = useState(1000);
+  const [money, setMoney] = useState(0);
   const [leftMenuOpen, setLeftMenuOpen] = useState(false);
   const [achievmentsMenuOpen, setAchievmentsMenuOpen] = useState(false);
   const [itemsMenuOpen, setItemsMenuOpen] = useState(false);
   const [catsMenuOpen, setCatsMenuOpen] = useState(false);
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
-
-  const dropChance = 0.25;
-  const clickPower = 1;
-
   const [ownedCats, setOwnedCats] = useState({});
   const [ownedUpgrades, setOwnedUpgrades] = useState({});
+
+  const clickPower = 1 * GetValue("multiCat", "clickMulti");
+  const moneyDropChance = 0.25 * GetValue("moneyDropChanceCat", "moneyDropChanceMulti");
+  const moneyMulti = 1 * GetValue("moneyMultiCat", "moneyMulti");
+  const critClickPower = 4 * GetValue("critMultiCat", "critMulti");
+  const crictChance = 0.025 * GetValue("critChanceMultiCat", "critChanceMulti");
+
+  function GetValue(catId, key) {
+    const cat = cats.find((c) => c.id === catId);
+    if (!ownedCats[catId]) return 1;
+
+    const level = ownedUpgrades[catId] || 0;
+    if (level === 0) return cat[key] ?? 1;
+
+    const upgrade = upgrades.filter((u) => u.catId === catId)[level - 1];
+    return upgrade[key] ?? 1;
+  }
 
   function BuyCat(cat) {
     if (ownedCats[cat.id] || money < cat.cost) return;
@@ -154,8 +167,11 @@ function Home() {
     setClicks((c) => c + clickPower);
 
     for (let i = 0; i < clickPower; i++) {
-      if (Math.random() < dropChance) {
-        setMoney((m) => m + 1);
+      if (Math.random() < moneyDropChance) {
+        setMoney((m) => m + moneyMulti);
+      }
+      if(Math.random() < crictChance){
+        setClicks((c) => c+ critClickPower)
       }
     }
   }
