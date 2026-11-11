@@ -13,17 +13,17 @@ function Achievement({ title, description, goal, clicks, claim }) {
   return (
     <div className={`achievement ${done ? "done" : ""}`}>
       <span className="achievTitle">{title}</span>
-      <span>{description}</span>
+      <span className="achievDesc">{description}</span>
       <span className="achievProgress">{clicks} / {goal}</span>
       <div className="achievementBar">
         <div className="achievementBarFill" style={{ width: `${progress}%` }} />
       </div>
-      <button className={`claimButton ${clicks>=goal ? "done" : ""}`} disabled={clicks < goal} onClick={claim}>Odbierz</button>
+      <button className={`claimButton ${done ? "done" : ""}`} disabled={!done} onClick={claim}>Odbierz</button>
     </div>
   );
 }
 
-function AchievmentsMenu({ isOpen, close, clicks }) {
+function AchievmentsMenu({ isOpen, close, clicks, claim }) {
   const reached = reachedAchievementLvl(clicks);
   const next = infiniteAchievement(reached + 1);
 
@@ -45,6 +45,7 @@ function AchievmentsMenu({ isOpen, close, clicks }) {
           description={a.description}
           goal={a.goal}
           clicks={clicks}
+          claim={claim}
         />
       ))}
 
@@ -55,6 +56,7 @@ function AchievmentsMenu({ isOpen, close, clicks }) {
           description={<>Zdobądź 10<sup>{a.power}</sup> kliknięć</>}
           goal={a.goal}
           clicks={clicks}
+          claim={claim}
         />
       ))}
     </div>

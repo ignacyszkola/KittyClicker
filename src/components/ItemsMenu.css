@@ -31,7 +31,7 @@
   font-weight: 2;
 }
 
-.itemsMenu button {
+.closeButton {
   background-color: #f369b0;
   border-top-right-radius: 19px;
   border: none;
@@ -44,11 +44,48 @@
   cursor: pointer;
 }
 
-.itemsMenu button:hover {
+.closeButton:hover {
   background-color: #f356a7;
 }
 
-.itemsMenu button img {
+.closeButton img {
   width: 80px;
   height: 80px;
+}
+.itemList {
+  display: flex;
+  flex-direction: row;
+  gap: 80px;
+  padding-left: 30px;
+}
+
+.item {
+  background-color: #ffb7ce;
+  width: 213px;
+  height: 306px;
+  border: white solid 3px;
+  border-radius: 25px;
+  color: white;
+  font-family: "Pacifico";
+  text-align: center;
+  font-size: 35px;
+}
+
+.item button {
+  background: none;
+  border: none;
+  color: #3ddc4a;
+  font-size: 40px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.item hr {
+  background-color: white;
+  border: none;
+  height: 3px;
+}
+
+.item img {
+  height: 110px;
 }

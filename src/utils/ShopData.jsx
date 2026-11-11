@@ -1,3 +1,6 @@
+import kremowka from "../assets/kremowka.png";
+import twoX from "../assets/2x.png"
+
 export const cats = [
   {
     id: "clickCat",
@@ -202,4 +205,9 @@ export const upgrades = [
     moneyDropChance: 1,
     cost: 100000,
   },
+];
+
+export const items = [
+  { id: "kremowka", name: "Kremówka", image: kremowka, boost: 21, time: 37 },
+  { id: "boost", name: "Boost", image: twoX, boost: 2, time: 300 },
 ];

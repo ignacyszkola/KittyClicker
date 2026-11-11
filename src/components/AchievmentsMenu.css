@@ -71,12 +71,12 @@
   font-size: 20px;
 }
 
-.claimButton{
+.claimButton {
   width: 500px;
   align-self: center;
   margin-top: 25px;
   color: white;
-  background-color: #9CA3AF;
+  background-color: #9ca3af;
   border-radius: 12px;
   border: none;
   height: 35px;
@@ -114,7 +114,9 @@
 .achievementBarFill {
   height: 100%;
   background: white;
-  transition: width 0.3s ease, background-color 0.3s ease;
+  transition:
+    width 0.3s ease,
+    background-color 0.3s ease;
 }
 
 .achievement.done .achievementBarFill {

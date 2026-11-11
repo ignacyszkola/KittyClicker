@@ -15,6 +15,8 @@ import { cats, upgrades } from "../utils/ShopData";
 import ShopItem from "../components/ShopItem";
 import clickSound from "../assets/clickSound.mp3";
 import clickCat from "../assets/clickCat.webp";
+import kremowka from "../assets/kremowka.png"
+import twoX from "../assets/2x.png"
 
 function PlaySound(type) {
   const sounds = {
@@ -146,8 +148,8 @@ function MoneyCounter({ moneyNumber }) {
 }
 
 function Home() {
-  const [clicks, setClicks] = useState(2000000);
-  const [money, setMoney] = useState(40000);
+  const [clicks, setClicks] = useState(2137);
+  const [money, setMoney] = useState(0);
   const [leftMenu, setleftMenu] = useState(false);
   const [achievmentsMenu, setachievmentsMenu] = useState(false);
   const [itemsMenu, setitemsMenu] = useState(false);
@@ -155,6 +157,7 @@ function Home() {
   const [accountMenu, setaccountMenu] = useState(false);
   const [ownedCats, setOwnedCats] = useState({});
   const [ownedUpgrades, setOwnedUpgrades] = useState({});
+  const [ownedItems, setOwnedItems] = useState({});
   const [popups, setPopups] = useState([]);
   const popupId = useRef(0);
 
@@ -207,6 +210,16 @@ function Home() {
 
     setMoney((m) => m - upgrade.cost);
     setOwnedUpgrades((l) => ({ ...l, [upgrade.catId]: level + 1 }));
+  }
+
+  //DOKONCZYC efekt uzycia, claimowanie itemow z osiagniecia i zeby wtedy juz nie mozna bylo zclaimowac z tego achievmenta
+  function UseItem(item) {
+    setOwnedItems((o) => ({...o, [item.id]: (o[item.id] ?? 0) - 1,
+    }));
+  }
+
+  function ClaimItem(item){
+
   }
 
   function Click() {
@@ -334,8 +347,9 @@ function Home() {
         isOpen={achievmentsMenu}
         close={() => setachievmentsMenu(false)}
         clicks={clicks}
+        claim={ClaimItem}
       />
-      <ItemsMenu isOpen={itemsMenu} close={() => setitemsMenu(false)} />
+      <ItemsMenu isOpen={itemsMenu} close={() => setitemsMenu(false)} ownedItems={ownedItems} use={UseItem} />
       <CatsMenu isOpen={catsMenu} close={() => setcatsMenu(false)} />
       <AccountMenu isOpen={accountMenu} close={() => setaccountMenu(false)} />
     </>
