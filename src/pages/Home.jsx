@@ -146,7 +146,7 @@ function MoneyCounter({ moneyNumber }) {
 }
 
 function Home() {
-  const [clicks, setClicks] = useState(0);
+  const [clicks, setClicks] = useState(2000000);
   const [money, setMoney] = useState(40000);
   const [leftMenu, setleftMenu] = useState(false);
   const [achievmentsMenu, setachievmentsMenu] = useState(false);
@@ -333,6 +333,7 @@ function Home() {
       <AchievmentsMenu
         isOpen={achievmentsMenu}
         close={() => setachievmentsMenu(false)}
+        clicks={clicks}
       />
       <ItemsMenu isOpen={itemsMenu} close={() => setitemsMenu(false)} />
       <CatsMenu isOpen={catsMenu} close={() => setcatsMenu(false)} />

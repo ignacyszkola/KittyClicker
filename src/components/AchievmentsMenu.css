@@ -14,6 +14,7 @@
     transform 0.25s ease,
     opacity 0.25s ease;
   z-index: 50;
+  overflow-y: auto;
 }
 
 .achievmentsMenu.open {
@@ -31,7 +32,7 @@
   font-weight: 2;
 }
 
-.achievmentsMenu button {
+.closeButton {
   background-color: #f369b0;
   border-top-right-radius: 19px;
   border: none;
@@ -44,11 +45,78 @@
   cursor: pointer;
 }
 
-.achievmentsMenu button:hover {
+.closeButton:hover {
   background-color: #f356a7;
 }
 
 .achievmentsMenu button img {
   width: 80px;
   height: 80px;
+}
+
+.achievementsList {
+  margin-top: 20px;
+}
+
+.achievement {
+  display: flex;
+  flex-direction: column;
+  height: 180px;
+  gap: 4px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 2px solid white;
+  background: #f877a0;
+  opacity: 0.5;
+  font-size: 20px;
+}
+
+.claimButton{
+  width: 500px;
+  align-self: center;
+  margin-top: 25px;
+  color: white;
+  background-color: #9CA3AF;
+  border-radius: 12px;
+  border: none;
+  height: 35px;
+  cursor: pointer;
+}
+
+.claimButton.done {
+  background-color: #3ddc4a;
+}
+
+.claimButton:disabled {
+  cursor: not-allowed;
+}
+
+.achievTitle {
+  font-weight: bolder;
+  font-size: 25px;
+}
+
+.achievProgress {
+  text-align: center;
+}
+
+.achievement.done {
+  opacity: 1;
+}
+
+.achievementBar {
+  height: 20px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.4);
+  overflow: hidden;
+}
+
+.achievementBarFill {
+  height: 100%;
+  background: white;
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.achievement.done .achievementBarFill {
+  background: #3ddc4a;
 }
