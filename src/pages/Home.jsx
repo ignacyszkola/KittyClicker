@@ -34,7 +34,7 @@ function ClickCat({ ownedCats }) {
   );
 }
 
-function CatBtn({ onClick }) {
+function CatBtn({ onClick, image }) {
   return (
     <button
       className="catBtn"
@@ -43,7 +43,7 @@ function CatBtn({ onClick }) {
         PlaySound("click");
       }}
     >
-      <img src={cat} draggable="false" />
+      <img src={image} draggable="false" />
     </button>
   );
 }
@@ -160,6 +160,7 @@ function Home() {
   const popupId = useRef(0);
   const [activeBoosts, setActiveBoosts] = useState([]);
   const [claimed, setClaimed] = useState({});
+  const [selectedCat, setSelectedCat] = useState({image: cat});
 
   const boostMulti = activeBoosts.reduce((m, b) => m * b.boost, 1);
 
@@ -242,6 +243,10 @@ function Home() {
       ...o,
       [achievement.reward]: (o[achievement.reward] ?? 0) + 1,
     }));
+  }
+
+  function ChooseCat(cat){
+    setSelectedCat(cat);
   }
 
   function Click() {
@@ -331,7 +336,7 @@ function Home() {
         buyCat={BuyCat}
         buyUpgrade={BuyUpgrade}
       />
-      <CatBtn onClick={Click} />
+      <CatBtn onClick={Click} image={selectedCat.image}/>
       <ClickPopups popups={popups} />
       <ClickCat ownedCats={ownedCats} />
       <ClickCounter clicksNumber={clicks} />
@@ -380,7 +385,7 @@ function Home() {
         ownedItems={ownedItems}
         use={UseItem}
       />
-      <CatsMenu isOpen={catsMenu} close={() => setcatsMenu(false)} />
+      <CatsMenu isOpen={catsMenu} close={() => setcatsMenu(false)} choose={ChooseCat} />
       <AccountMenu isOpen={accountMenu} close={() => setaccountMenu(false)} />
     </>
   );

@@ -1,5 +1,8 @@
 import kremowka from "../assets/kremowka.png";
 import twoX from "../assets/2x.png"
+import cat from "../assets/cat.png"
+import popeCat from "../assets/pope.webp"
+import floppaCat from "../assets/flop.webp"
 
 export const cats = [
   {
@@ -210,4 +213,10 @@ export const upgrades = [
 export const items = [
   { id: "kremowka", name: "Kremówka", image: kremowka, boost: 21, time: 37 },
   { id: "boost", name: "Boost", image: twoX, boost: 2, time: 300 },
+];
+
+export const clickCats = [
+  {id: "default", name: "John Cat", image: cat},
+  {id: "floppa", name: "Floppa Cat", image: floppaCat},
+  {id: "pope", name: "Pope Cat", image: popeCat}
 ];
