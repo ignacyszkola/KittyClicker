@@ -6,7 +6,7 @@ function Item({ name, image, use, count }) {
   return (
     <div className="item">
       <span>{name} x{count}</span>
-      <img src={image} />
+      <img src={image} draggable="false"/>
       <hr />
       <button onClick={use}>Użyj</button>
     </div>

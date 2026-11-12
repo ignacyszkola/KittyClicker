@@ -67,7 +67,7 @@ function ClickPopups({ popups }) {
 function OpenLftMenuBtn({ onClick, isOpen }) {
   return (
     <button className="menuButton" onClick={onClick}>
-      <img src={isOpen ? closeIcon : menuIcon} />
+      <img src={isOpen ? closeIcon : menuIcon} draggable="false"/>
     </button>
   );
 }
@@ -130,7 +130,7 @@ function Shop({ money, ownedCats, ownedUpgrades, buyCat, buyUpgrade }) {
 function ClickCounter({ clicksNumber }) {
   return (
     <div className="clickCounter">
-      <img src={cursorIcon} />
+      <img src={cursorIcon} draggable="false"/>
       <p>{FormatNumber(clicksNumber)}</p>
     </div>
   );
@@ -139,7 +139,7 @@ function ClickCounter({ clicksNumber }) {
 function MoneyCounter({ moneyNumber }) {
   return (
     <div className="moneyCounter">
-      <img src={catFoodIcon} />
+      <img src={catFoodIcon} draggable="false"/>
       <p>{FormatNumber(moneyNumber)}</p>
     </div>
   );

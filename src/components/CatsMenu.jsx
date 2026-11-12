@@ -6,7 +6,7 @@ function Cat({ name, image, choose }) {
   return (
     <div className="cat">
       <span>{name}</span><br />
-      <img src={image} />
+      <img src={image} draggable="false"/>
       <hr />
       <button onClick={choose}>Wybierz</button>
     </div>
