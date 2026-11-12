@@ -11,12 +11,10 @@ import ItemsMenu from "../components/ItemsMenu";
 import CatsMenu from "../components/CatsMenu";
 import AccountMenu from "../components/AccountMenu";
 import cat from "../assets/cat.png";
-import { cats, upgrades } from "../utils/ShopData";
+import { cats, upgrades, items } from "../utils/ShopData";
 import ShopItem from "../components/ShopItem";
 import clickSound from "../assets/clickSound.mp3";
 import clickCat from "../assets/clickCat.webp";
-import kremowka from "../assets/kremowka.png"
-import twoX from "../assets/2x.png"
 
 function PlaySound(type) {
   const sounds = {
@@ -160,8 +158,12 @@ function Home() {
   const [ownedItems, setOwnedItems] = useState({});
   const [popups, setPopups] = useState([]);
   const popupId = useRef(0);
+  const [activeBoosts, setActiveBoosts] = useState([]);
+  const [claimed, setClaimed] = useState({});
 
-  const clickPower = 1 * UpgradeValue("multiCat", "clickMulti");
+  const boostMulti = activeBoosts.reduce((m, b) => m * b.boost, 1);
+
+  const clickPower = 1 * UpgradeValue("multiCat", "clickMulti") * boostMulti;
   const moneyDropChance = UpgradeValue("moneyDropChanceCat", "moneyDropChance", 0.25);
   const moneyMulti = 1 * UpgradeValue("moneyMultiCat", "moneyMulti");
   const critClickPower = UpgradeValue("critMultiCat", "critMulti", 2);
@@ -214,12 +216,32 @@ function Home() {
 
   //DOKONCZYC efekt uzycia, claimowanie itemow z osiagniecia i zeby wtedy juz nie mozna bylo zclaimowac z tego achievmenta
   function UseItem(item) {
-    setOwnedItems((o) => ({...o, [item.id]: (o[item.id] ?? 0) - 1,
-    }));
+    if (!ownedItems[item.id]) return;
+
+    setOwnedItems((o) => ({ ...o, [item.id]: o[item.id] - 1 }));
+
+    const boostId = Date.now() + Math.random();
+    setActiveBoosts((list) => [
+      ...list,
+      {
+        id: boostId,
+        itemId: item.id,
+        boost: item.boost,
+        endsAt: Date.now() + item.time * 1000,
+      },
+    ]);
+
+    setTimeout(() => {
+      setActiveBoosts((list) => list.filter((b) => b.id !== boostId));
+    }, item.time * 1000);
   }
 
-  function ClaimItem(item){
-
+  function ClaimItem(achievement) {
+    setClaimed((c) => ({ ...c, [achievement.id]: true }));
+    setOwnedItems((o) => ({
+      ...o,
+      [achievement.reward]: (o[achievement.reward] ?? 0) + 1,
+    }));
   }
 
   function Click() {
@@ -252,7 +274,9 @@ function Home() {
     const upgradesList = upgrades.filter((u) => u.catId === "clickCat");
 
     return (
-      upgradesList[level - 1]?.[key] ?? cats.find((c) => c.id === "clickCat")?.[key] ?? 0
+      upgradesList[level - 1]?.[key] ??
+      cats.find((c) => c.id === "clickCat")?.[key] ??
+      0
     );
   }
 
@@ -272,7 +296,7 @@ function Home() {
       for (let i = 0; i < Math.floor(clickPower); i++) {
         if (Math.random() < moneyDropChance) moneyGain += moneyDropAmount;
       }
-      
+
       if (Math.random() < critChance) critGain += clickPower * critClickPower;
 
       if (critGain > 0) {
@@ -348,8 +372,14 @@ function Home() {
         close={() => setachievmentsMenu(false)}
         clicks={clicks}
         claim={ClaimItem}
+        claimed={claimed}
       />
-      <ItemsMenu isOpen={itemsMenu} close={() => setitemsMenu(false)} ownedItems={ownedItems} use={UseItem} />
+      <ItemsMenu
+        isOpen={itemsMenu}
+        close={() => setitemsMenu(false)}
+        ownedItems={ownedItems}
+        use={UseItem}
+      />
       <CatsMenu isOpen={catsMenu} close={() => setcatsMenu(false)} />
       <AccountMenu isOpen={accountMenu} close={() => setaccountMenu(false)} />
     </>

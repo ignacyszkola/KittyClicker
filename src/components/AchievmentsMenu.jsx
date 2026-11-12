@@ -5,8 +5,9 @@ import {
   infiniteAchievement,
   reachedAchievementLvl,
 } from "../utils/achievements";
+import { items } from "../utils/ShopData";
 
-function Achievement({ title, description, goal, clicks, claim }) {
+function Achievement({ title, description, goal, clicks, claim, claimed }) {
   const done = clicks >= goal;
   const progress = Math.min(100, (clicks / goal) * 100);
 
@@ -18,18 +19,23 @@ function Achievement({ title, description, goal, clicks, claim }) {
       <div className="achievementBar">
         <div className="achievementBarFill" style={{ width: `${progress}%` }} />
       </div>
-      <button className={`claimButton ${done ? "done" : ""}`} disabled={!done} onClick={claim}>Odbierz</button>
+      {done &&
+        (claimed ? (
+          <span className="achievementClaimed">Odebrano</span>
+        ) : (
+          <button className={`claimButton ${done ? "done" : ""}`}onClick={claim}>Odbierz</button>
+        ))}
     </div>
   );
 }
 
-function AchievmentsMenu({ isOpen, close, clicks, claim }) {
+function AchievmentsMenu({ isOpen, close, clicks, claim, claimed }) {
   const reached = reachedAchievementLvl(clicks);
   const next = infiniteAchievement(reached + 1);
 
-  const recent = Array.from({ length: reached }, (_, i) =>
-    infiniteAchievement(reached - i),
-  );
+  const reachedList = Array.from({ length: reached }, (_, i) => infiniteAchievement(i + 1));
+  const unclaimed = reachedList.filter((a) => !claimed[a.id]);
+  const recentlyClaimed = reachedList.filter((a) => claimed[a.id]).slice(-3).reverse();
 
   return (
     <div className={`achievmentsMenu ${isOpen ? "open" : ""}`}>
@@ -45,18 +51,20 @@ function AchievmentsMenu({ isOpen, close, clicks, claim }) {
           description={a.description}
           goal={a.goal}
           clicks={clicks}
-          claim={claim}
+          claim={() => claim(a)}
+          claimed={claimed[a.id]}
         />
       ))}
 
-      {[next, ...recent].map((a) => (
+      {[...unclaimed, next, ...recentlyClaimed].map((a) => (
         <Achievement
           key={a.id}
           title={<>10<sup>{a.power}</sup></>}
           description={<>Zdobądź 10<sup>{a.power}</sup> kliknięć</>}
           goal={a.goal}
           clicks={clicks}
-          claim={claim}
+          claim={() => claim(a)}
+          claimed={claimed[a.id]}
         />
       ))}
     </div>

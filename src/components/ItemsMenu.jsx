@@ -1,11 +1,11 @@
 import "./ItemsMenu.css";
 import closeIcon from "../assets/close.svg";
-import { items } from "../utils/ShopData";;
+import { items } from "../utils/ShopData";
 
-function Item({ name, image, use }) {
+function Item({ name, image, use, count }) {
   return (
     <div className="item">
-      <span>{name}</span>
+      <span>{name} x{count}</span>
       <img src={image} />
       <hr />
       <button onClick={use}>Użyj</button>
@@ -27,6 +27,7 @@ function ItemsMenu({ isOpen, close, ownedItems, use }) {
             <Item
               key={item.id}
               name={item.name}
+              count={ownedItems[item.id]}
               image={item.image}
               use={() => use(item)}
             />
