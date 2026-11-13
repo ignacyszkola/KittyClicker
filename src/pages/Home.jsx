@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import "./Home.css";
 import menuIcon from "../assets/menu.svg";
 import cursorIcon from "../assets/cursor.png";
@@ -15,6 +16,12 @@ import { cats, upgrades, items } from "../utils/ShopData";
 import ShopItem from "../components/ShopItem";
 import clickSound from "../assets/clickSound.mp3";
 import clickCat from "../assets/clickCat.webp";
+import multiCat from "../assets/multiCat.gif"
+import moneyMultiCat from "../assets/moneyMultiCat.gif"
+import critMultiCat from "../assets/critMultiCat.webp"
+import critChanceMultiCat from "../assets/critChanceMultiCat.webp"
+import moneyDropChanceCat from "../assets/moneyDropChanceCat.webp"
+
 
 function PlaySound(type) {
   const sounds = {
@@ -30,6 +37,51 @@ function ClickCat({ ownedCats }) {
   return (
     <div className="clickCat">
       <img src={clickCat} />
+    </div>
+  );
+}
+
+function MultiCat({ ownedCats }) {
+  if (!ownedCats.multiCat) return null;
+  return (
+    <div className="multiCat">
+      <img src={multiCat} />
+    </div>
+  );
+}
+
+function MoneyMultiCat({ ownedCats }) {
+  if (!ownedCats.moneyMultiCat) return null;
+  return (
+    <div className="moneyMultiCat">
+      <img src={moneyMultiCat} />
+    </div>
+  );
+}
+
+function CritMultiCat({ ownedCats }) {
+  if (!ownedCats.critMultiCat) return null;
+  return (
+    <div className="critMultiCat">
+      <img src={critMultiCat} />
+    </div>
+  );
+}
+
+function CritChanceMultiCat({ ownedCats }) {
+  if (!ownedCats.critChanceMultiCat) return null;
+  return (
+    <div className="critChanceMultiCat">
+      <img src={critChanceMultiCat} />
+    </div>
+  );
+}
+
+function MoneyDropChanceCat({ ownedCats }) {
+  if (!ownedCats.moneyDropChanceCat) return null;
+  return (
+    <div className="moneyDropChanceCat">
+      <img src={moneyDropChanceCat} />
     </div>
   );
 }
@@ -147,7 +199,7 @@ function MoneyCounter({ moneyNumber }) {
 
 function Home() {
   const [clicks, setClicks] = useState(2137);
-  const [money, setMoney] = useState(0);
+  const [money, setMoney] = useState(200000);
   const [leftMenu, setleftMenu] = useState(false);
   const [achievmentsMenu, setachievmentsMenu] = useState(false);
   const [itemsMenu, setitemsMenu] = useState(false);
@@ -339,6 +391,11 @@ function Home() {
       <CatBtn onClick={Click} image={selectedCat.image}/>
       <ClickPopups popups={popups} />
       <ClickCat ownedCats={ownedCats} />
+      <MultiCat ownedCats={ownedCats}/>
+      <MoneyMultiCat ownedCats={ownedCats} />
+      <CritMultiCat ownedCats={ownedCats} />
+      <CritChanceMultiCat ownedCats={ownedCats} />
+      <MoneyDropChanceCat ownedCats={ownedCats} />
       <ClickCounter clicksNumber={clicks} />
       <MoneyCounter moneyNumber={money} />
       <LeftMenu

@@ -179,6 +179,63 @@ body {
   height: 178.5px;
 }
 
+.multiCat {
+  position: fixed;
+  top: 50px;
+  left: 430px;
+}
+
+.multiCat img {
+  width: 217.88px;
+  height: 175.36px;
+}
+
+.moneyMultiCat {
+  position: fixed;
+  bottom: 80px;
+  right: 430px;
+}
+
+.moneyMultiCat img {
+  width: 270px;
+  height: 211.5x;
+}
+
+.critMultiCat {
+  position: fixed;
+  bottom: 90px;
+  left: 430px;
+}
+
+.critMultiCat img {
+  width: 405px;
+  height: 173.08px;
+}
+
+.critChanceMultiCat {
+  position: fixed;
+  bottom: 390px;
+  left: 300px;
+}
+
+.critChanceMultiCat img {
+  width: 345.94px;
+  height: 268.88px;
+}
+
+.moneyDropChanceCat {
+  position: fixed;
+  top: 300px;
+  right: 430px;
+}
+
+.moneyDropChanceCat img {
+  width: 298.13px;
+  height: 254.81px;
+}
+
+
+
 .popupLayer {
   position: fixed;
   top: 50%;
