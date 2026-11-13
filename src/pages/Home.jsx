@@ -36,7 +36,7 @@ function ClickCat({ ownedCats }) {
   if (!ownedCats.clickCat) return null;
   return (
     <div className="clickCat">
-      <img src={clickCat} />
+      <img src={clickCat} draggable="false"/>
     </div>
   );
 }
@@ -45,7 +45,7 @@ function MultiCat({ ownedCats }) {
   if (!ownedCats.multiCat) return null;
   return (
     <div className="multiCat">
-      <img src={multiCat} />
+      <img src={multiCat} draggable="false"/>
     </div>
   );
 }
@@ -54,7 +54,7 @@ function MoneyMultiCat({ ownedCats }) {
   if (!ownedCats.moneyMultiCat) return null;
   return (
     <div className="moneyMultiCat">
-      <img src={moneyMultiCat} />
+      <img src={moneyMultiCat} draggable="false"/>
     </div>
   );
 }
@@ -63,7 +63,7 @@ function CritMultiCat({ ownedCats }) {
   if (!ownedCats.critMultiCat) return null;
   return (
     <div className="critMultiCat">
-      <img src={critMultiCat} />
+      <img src={critMultiCat} draggable="false"/>
     </div>
   );
 }
@@ -72,7 +72,7 @@ function CritChanceMultiCat({ ownedCats }) {
   if (!ownedCats.critChanceMultiCat) return null;
   return (
     <div className="critChanceMultiCat">
-      <img src={critChanceMultiCat} />
+      <img src={critChanceMultiCat} draggable="false"/>
     </div>
   );
 }
@@ -81,7 +81,7 @@ function MoneyDropChanceCat({ ownedCats }) {
   if (!ownedCats.moneyDropChanceCat) return null;
   return (
     <div className="moneyDropChanceCat">
-      <img src={moneyDropChanceCat} />
+      <img src={moneyDropChanceCat} draggable="false"/>
     </div>
   );
 }
