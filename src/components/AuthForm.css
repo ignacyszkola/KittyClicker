@@ -1,0 +1,79 @@
+.authForm {
+  width: 710px;
+  box-sizing: border-box;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background-color: #ef81ba;
+  border: 6px solid white;
+  border-radius: 25px;
+}
+
+.authForm h2 {
+  margin: 0;
+  text-align: center;
+  font-family: "Pacifico";
+  font-size: 45px;
+  font-weight: normal;
+  color: white;
+}
+
+.authForm input {
+  height: 56px;
+  box-sizing: border-box;
+  padding: 0 20px;
+  border: 3px solid white;
+  border-radius: 14px;
+  background-color: #ffe6ee;
+  color: #2b1d2b;
+  font-size: 20px;
+  outline: none;
+}
+
+.authForm input:focus {
+  border-color: #f877a0;
+}
+
+.authError {
+  margin: 0;
+  text-align: center;
+  color: white;
+  background-color: #d94a6a;
+  border-radius: 10px;
+  padding: 8px 12px;
+}
+
+.authSubmit {
+  height: 56px;
+  border: 3px solid white;
+  border-radius: 14px;
+  background-color: #f877a0;
+  color: white;
+  font-family: "Pacifico";
+  font-size: 26px;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.authSubmit:hover:not(:disabled) {
+  transform: scale(1.03);
+}
+
+.authSubmit:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+.authSubmit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.authSwitch {
+  border: none;
+  background: none;
+  color: white;
+  font-size: 18px;
+  text-decoration: underline;
+  cursor: pointer;
+}

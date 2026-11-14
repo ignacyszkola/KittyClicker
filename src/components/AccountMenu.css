@@ -1,4 +1,6 @@
 .accountMenu {
+  display: flex;
+  flex-direction: column;
   width: 1122px;
   height: 704px;
   border-radius: 25px;
@@ -58,13 +60,16 @@
   font-size: 55px;
   color: white;
   font-weight: 2;
+  align-self: center;
 }
 
 .accountDetails {
+  flex: 1;
+  width: 500px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  align-items: start;
-  padding-left: 180px;
+  justify-content:flex-start;
 }
 
 .accountDetails label {
@@ -76,41 +81,29 @@
 .accountDetails input {
   border-radius: 12px;
   border: #e5e7eb 2px solid;
-  width: 500px;
   height: 50px;
   font-size: 20px;
 }
 
-.accountDetails button {
-  background-color: #ef81ba;
-  border: none;
+.logoutButton {
+  height: 56px;
+  border: 3px solid white;
+  border-radius: 14px;
+  background-color: #f877a0;
+  color: white;
+  font-family: "Pacifico";
+  font-size: 26px;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+  margin-top: 20px;
+}
+
+.logoutButton:hover {
+  transform: scale(1.03);
 }
 
 .passwordRow {
   display: flex;
   align-items: center;
   gap: 10px;
-}
-
-.showButton {
-  cursor: pointer;
-  padding: 0;
-  display: flex;
-  align-items: center;
-}
-
-.showButton img {
-  width: 40px;
-  height: 40px;
-  border-radius: 25px;
-  transition: background-color 0.3s ease;
-  transition: transform 0.3s ease;
-}
-
-.showButton img:active {
-  transform: scale(0.8);
-}
-
-.showButton img:hover {
-  background-color: rgba(199, 194, 194, 0.4);
 }
