@@ -1,7 +1,7 @@
-import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { AuthContext } from "./useAuth";
 import { loginRequest, registerRequest, meRequest } from "./api/auth";
-
-const AuthContext = createContext(null);
+import { setUnauthorizedHandler } from "./api/client";
 
 export function AuthProvider({ children }) {
   const [token, setToken] = useState(() => localStorage.getItem("token"));
@@ -13,6 +13,10 @@ export function AuthProvider({ children }) {
     setToken(null);
     setUser(null);
   }, []);
+
+  useEffect(() => {
+    setUnauthorizedHandler(logout);
+  }, [logout]);
 
   useEffect(() => {
     if (!token || user) return;
@@ -48,8 +52,4 @@ export function AuthProvider({ children }) {
       {children}
     </AuthContext.Provider>
   );
-}
-
-export function useAuth() {
-  return useContext(AuthContext);
 }

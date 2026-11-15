@@ -21,6 +21,7 @@ import moneyMultiCat from "../assets/moneyMultiCat.gif"
 import critMultiCat from "../assets/critMultiCat.webp"
 import critChanceMultiCat from "../assets/critChanceMultiCat.webp"
 import moneyDropChanceCat from "../assets/moneyDropChanceCat.webp"
+import { useGameSync } from "../useGameSync";
 
 
 function PlaySound(type) {
@@ -198,8 +199,8 @@ function MoneyCounter({ moneyNumber }) {
 }
 
 function Home() {
-  const [clicks, setClicks] = useState(2137);
-  const [money, setMoney] = useState(200000);
+  const [clicks, setClicks] = useState(0);
+  const [money, setMoney] = useState(0);
   const [leftMenu, setleftMenu] = useState(false);
   const [achievmentsMenu, setachievmentsMenu] = useState(false);
   const [itemsMenu, setitemsMenu] = useState(false);
@@ -213,6 +214,17 @@ function Home() {
   const [activeBoosts, setActiveBoosts] = useState([]);
   const [claimed, setClaimed] = useState({});
   const [selectedCat, setSelectedCat] = useState({image: cat});
+
+  const gameState = { clicks, money, ownedCats, ownedUpgrades, ownedItems, claimed};
+
+  const { loaded, error } = useGameSync(gameState, (data) => {
+    setClicks(data.clicks);
+    setMoney(data.money);
+    setOwnedCats(data.ownedCats);
+    setOwnedUpgrades(data.ownedUpgrades);
+    setOwnedItems(data.ownedItems);
+    setClaimed(data.claimed);
+  });
 
   const boostMulti = activeBoosts.reduce((m, b) => m * b.boost, 1);
 
@@ -373,6 +385,9 @@ function Home() {
 
     return () => clearInterval(id);
   }, [ownedCats.clickCat, ownedUpgrades.clickCat]);
+
+  if (error) return <p className="techMessage">Something went wrong : {error}</p>;
+  if (!loaded) return <p className="techMessage">Loading game...</p>;
 
   return (
     <>

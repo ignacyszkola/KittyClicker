@@ -1,6 +1,6 @@
 import "./AccountMenu.css";
 import closeIcon from "../assets/close.svg";
-import { useAuth } from "../AuthContext";
+import { useAuth } from "../useAuth.js";
 
 function AccountMenu({ isOpen, close }) {
   const { user, logout } = useAuth();

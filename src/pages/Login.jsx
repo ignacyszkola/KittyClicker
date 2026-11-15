@@ -1,5 +1,5 @@
 import { Navigate } from "react-router-dom";
-import { useAuth } from "../AuthContext";
+import { useAuth } from "../useAuth.js";
 import AuthForm from "../components/AuthForm";
 import "./Home.css";
 import "./Login.css";
