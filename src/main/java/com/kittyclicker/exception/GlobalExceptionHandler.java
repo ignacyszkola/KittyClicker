@@ -1,6 +1,7 @@
 package com.kittyclicker.exception;
 
 import com.kittyclicker.dto.ApiError;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
@@ -46,5 +48,18 @@ public class GlobalExceptionHandler {
         );
 
         return ResponseEntity.badRequest().body(error);
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity<ApiError> handle404Error(
+            NoSuchElementException ex
+    ){
+
+        ApiError error = new ApiError(
+                "Not Found, 404 error",
+                404, Map.of()
+        );
+
+       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error); // found it on Overflow though
     }
 }

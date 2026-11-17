@@ -1,7 +1,7 @@
 package com.kittyclicker.dto;
 
-public record UserRegistrationResponse(
+public record UserBalanceResponse(
         Long id,
         String username,
-        String message
+        long money
 ) {}

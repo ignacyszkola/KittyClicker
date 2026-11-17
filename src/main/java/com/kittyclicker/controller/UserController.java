@@ -1,8 +1,9 @@
 package com.kittyclicker.controller;
 
+import com.kittyclicker.dto.AmountRequest;
 import com.kittyclicker.dto.UserRegistrationRequest;
-import com.kittyclicker.dto.UserRegistrationResponse;
-import com.kittyclicker.dto.UserResponse;
+import com.kittyclicker.dto.UserActionResponse;
+import com.kittyclicker.dto.UserBalanceResponse;
 import com.kittyclicker.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,7 @@ public class UserController {
     public UserController(UserService userService){ this.userService = userService; }
 
     @PostMapping(value = "/register", produces = "application/json")
-    public ResponseEntity<UserRegistrationResponse> register(@Valid @RequestBody UserRegistrationRequest request) {
+    public ResponseEntity<UserActionResponse> register(@Valid @RequestBody UserRegistrationRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.register(request));
     }
 
@@ -33,8 +34,23 @@ public class UserController {
     }
 
     @GetMapping(value = "/{id}")
-    public UserResponse getUserById(@PathVariable Long id){
+    public UserBalanceResponse getUserById(@PathVariable Long id){
         return userService.getUserById(id);
     }
 
+    @PatchMapping(value = "/{id}/money", produces = "application/json")
+    public UserBalanceResponse addMoney(@PathVariable Long id, @Valid @RequestBody AmountRequest amount){
+        return userService.addMoney(id, amount.amount());
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public UserActionResponse deleteUserById(@PathVariable Long id){
+        return userService.deleteUserById(id);
+    }
+
+    @PostMapping(value = "/{id}/click")
+    public ResponseEntity<?> CPS(@PathVariable Long id){
+
+//        return ResponseEntity.status(HttpStatus.)
+    }
 }
