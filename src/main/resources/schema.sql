@@ -26,11 +26,10 @@ CREATE TABLE IF NOT EXISTS cat_skins (
 );
 
 CREATE TABLE IF NOT EXISTS items (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id INTEGER PRIMARY KEY,
     code TEXT NOT NULL UNIQUE,
     name TEXT NOT NULL,
-    image_path TEXT NOT NULL,
-    boost_multiplier INTEGER NOT NULL,
+    boost_multiplier BIGINT NOT NULL,
     duration_seconds INTEGER NOT NULL
 );
 

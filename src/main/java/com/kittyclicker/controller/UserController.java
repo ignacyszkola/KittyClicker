@@ -49,8 +49,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/{id}/click")
-    public ResponseEntity<?> CPS(@PathVariable Long id){
-
-//        return ResponseEntity.status(HttpStatus.)
+    public UserActionResponse click(@PathVariable Long id) {
+        return userService.click(id);
     }
 }
