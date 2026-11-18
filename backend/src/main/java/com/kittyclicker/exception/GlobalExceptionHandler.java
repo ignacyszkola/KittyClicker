@@ -60,6 +60,6 @@ public class GlobalExceptionHandler {
                 404, Map.of()
         );
 
-       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error); // found it on Overflow though
+       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 }
