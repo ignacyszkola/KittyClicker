@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useAuth } from "./useAuth.js";
 import { loadGame, saveGame, saveGameOnExit } from "./api/game";
 
-const SAVE_INTERVAL = 5000;
+const SAVE_INTERVAL = 30000;
 
 export function useGameSync(state, applyState) {
   const { token } = useAuth();
@@ -24,7 +24,7 @@ export function useGameSync(state, applyState) {
     let cancelled = false;
     loadGame(token)
       .then((data) => {
-        if (cancelled) return;
+        if (cancelled) return; 
         applyRef.current(data);
         lastSavedRef.current = JSON.stringify(data);
         setLoaded(true);
