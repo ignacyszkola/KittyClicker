@@ -1,12 +1,10 @@
-cat > .gitignore <<'EOF'
+**/*.db
+**/*.db.backup
 
-.idea/
-*.iml
+**/.env
 
 **/target/
 **/.mvn/wrapper/maven-wrapper.jar
 
-**/.env
-
-.vscode/
-EOF
+.idea/
+*.iml
