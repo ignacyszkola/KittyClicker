@@ -1,5 +1,6 @@
 **/*.db
 **/*.db.backup
+backend/src/main/resources/data.sql
 
 **/.env
 

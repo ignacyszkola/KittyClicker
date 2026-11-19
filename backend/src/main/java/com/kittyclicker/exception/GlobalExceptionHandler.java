@@ -56,10 +56,23 @@ public class GlobalExceptionHandler {
     ){
 
         ApiError error = new ApiError(
-                "Not Found, 404 error",
+                ex.getMessage() != null ? ex.getMessage() : "Not found, error 404",
                 404, Map.of()
         );
 
        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity<ApiError> handleUnauthorized(
+            InvalidCredentialsException ex
+    ){
+
+        ApiError error = new ApiError(
+                ex.getMessage(),
+                401, Map.of()
+        );
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
 }

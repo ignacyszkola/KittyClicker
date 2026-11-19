@@ -1,9 +1,6 @@
 package com.kittyclicker.controller;
 
-import com.kittyclicker.dto.AmountRequest;
-import com.kittyclicker.dto.UserRegistrationRequest;
-import com.kittyclicker.dto.UserActionResponse;
-import com.kittyclicker.dto.UserBalanceResponse;
+import com.kittyclicker.dto.*;
 import com.kittyclicker.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -52,4 +49,10 @@ public class UserController {
     public UserActionResponse click(@PathVariable Long id) {
         return userService.click(id);
     }
+
+    @PostMapping(value = "/login", produces = "application/json")
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request){
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(userService.login(request));
+    }
+
 }

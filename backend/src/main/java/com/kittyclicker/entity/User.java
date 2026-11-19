@@ -1,6 +1,7 @@
 package com.kittyclicker.entity;
 
 import jakarta.persistence.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,6 +67,9 @@ public class User {
     }
     public UserCatSkin getSelectedSkin() {
         return selectedSkin;
+    }
+    public String getHashedPassword(){
+        return password;
     }
 
     public void setMoney(long money) {
