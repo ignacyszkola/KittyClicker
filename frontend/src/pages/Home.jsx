@@ -22,6 +22,7 @@ import critMultiCat from "../assets/critMultiCat.webp"
 import critChanceMultiCat from "../assets/critChanceMultiCat.webp"
 import moneyDropChanceCat from "../assets/moneyDropChanceCat.webp"
 import { useGameSync } from "../useGameSync";
+import { ClickSender } from "../clickSender";
 
 
 function PlaySound(type) {
@@ -215,9 +216,11 @@ function Home() {
   const [claimed, setClaimed] = useState({});
   const [selectedCat, setSelectedCat] = useState({image: cat});
 
+  const { send: sendClickToServer, limited } = ClickSender();
+
   const gameState = { clicks, money, ownedCats, ownedUpgrades, ownedItems, claimed};
 
-  const { loaded, error } = useGameSync(gameState, (data) => {
+  const { loaded, error, rateLimited } = useGameSync(gameState, (data) => {
     setClicks(data.clicks);
     setMoney(data.money);
     setOwnedCats(data.ownedCats);
@@ -314,6 +317,7 @@ function Home() {
   }
 
   function Click() {
+    sendClickToServer();
     let moneyGain = 0;
     let critGain = 0;
 
@@ -387,11 +391,12 @@ function Home() {
   }, [ownedCats.clickCat, ownedUpgrades.clickCat]);
 
   if (error) return <p className="techMessage">Something went wrong : {error}</p>;
-  if (!loaded) return <p className="techMessage">Loading game...</p>;
+  if (!loaded) return <p className="techMessage">Loading game...</p>;  
 
   return (
     <>
       <h1 className="homeTitle">KittyClicker</h1>
+      {(limited || rateLimited) && <p className="rateLimitWarning">Klikasz zbyt szybko!</p>}
       <OpenLftMenuBtn
         isOpen={leftMenu}
         onClick={() => setleftMenu((open) => !open)}

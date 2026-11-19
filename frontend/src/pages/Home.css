@@ -288,3 +288,15 @@ body {
   margin-top: 400px;
   font-size: 64px;
 }
+
+.rateLimitWarning {
+  position: fixed;
+  top: 300px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  margin: 0;
+  color: red;
+  font-size: 100px;
+  font-weight: bolder;
+}

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useAuth } from "./useAuth.js";
-import { loadGame, saveGame, saveGameOnExit } from "./api/game";
+import { useAuth } from "./useAuth";
+import { loadGame, saveGame, saveGameOnExit, toSaveBody } from "./api/game";
 
 const SAVE_INTERVAL = 30000;
 
@@ -8,6 +8,8 @@ export function useGameSync(state, applyState) {
   const { token } = useAuth();
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState("");
+  const [rateLimited, setRateLimited] = useState(false);
+  const pausedUntilRef = useRef(0);
 
   const stateRef = useRef(state);
   const applyRef = useRef(applyState);
@@ -24,9 +26,9 @@ export function useGameSync(state, applyState) {
     let cancelled = false;
     loadGame(token)
       .then((data) => {
-        if (cancelled) return; 
+        if (cancelled) return;
         applyRef.current(data);
-        lastSavedRef.current = JSON.stringify(data);
+        lastSavedRef.current = JSON.stringify(toSaveBody(data));
         setLoaded(true);
       })
       .catch((err) => {
@@ -39,14 +41,22 @@ export function useGameSync(state, applyState) {
   }, [token]);
 
   const save = useCallback(async () => {
-    const json = JSON.stringify(stateRef.current);
+    if (Date.now() < pausedUntilRef.current) return;
+
+    const json = JSON.stringify(toSaveBody(stateRef.current));
     if (json === lastSavedRef.current) return;
 
     lastSavedRef.current = json;
     try {
       await saveGame(token, stateRef.current);
-    } catch {
+      setRateLimited(false);
+    } catch (err) {
       lastSavedRef.current = null;
+
+      if (err.status === 429) {
+        pausedUntilRef.current = Date.now() + (err.retryAfter ?? 10) * 1000;
+        setRateLimited(true);
+      }
     }
   }, [token]);
 
@@ -73,6 +83,7 @@ export function useGameSync(state, applyState) {
     state.ownedUpgrades,
     state.ownedItems,
     state.claimed,
+    state.selectedCatId,
   ]);
 
   useEffect(() => {
@@ -80,5 +91,5 @@ export function useGameSync(state, applyState) {
     save();
   }, [purchasesKey, loaded, save]);
 
-  return { loaded, error };
+  return { loaded, error, rateLimited };
 }
