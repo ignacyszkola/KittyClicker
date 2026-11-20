@@ -8,7 +8,7 @@ function Item({ name, image, use, count }) {
       <span>{name} x{count}</span>
       <img src={image} draggable="false"/>
       <hr />
-      <button onClick={use}>Użyj</button>
+      <button onClick={use}>Use</button>
     </div>
   );
 }
@@ -16,7 +16,7 @@ function Item({ name, image, use, count }) {
 function ItemsMenu({ isOpen, close, ownedItems, use }) {
   return (
     <div className={`itemsMenu ${isOpen ? "open" : ""}`}>
-      <h2>Itemy</h2>
+      <h2>Items</h2>
       <button onClick={close} className="closeButton">
         <img src={closeIcon} />
       </button>

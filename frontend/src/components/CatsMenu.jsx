@@ -8,7 +8,7 @@ function Cat({ name, image, choose }) {
       <span>{name}</span><br />
       <img src={image} draggable="false"/>
       <hr />
-      <button onClick={choose}>Wybierz</button>
+      <button onClick={choose}>Choose</button>
     </div>
   );
 }
@@ -16,7 +16,7 @@ function Cat({ name, image, choose }) {
 function CatsMenu({ isOpen, close, choose }) {
   return (
     <div className={`catsMenu ${isOpen ? "open" : ""}`}>
-      <h2>Koty</h2>
+      <h2>Cats</h2>
       <button onClick={close} className="closeButton">
         <img src={closeIcon} />
       </button>

@@ -1,5 +1,5 @@
 export const singleCompleteAchievements = [
-  { id: "2137clicks", name: "2137", description: "Zdobądź 2137 kliknięć", goal: 2137, reward: "kremowka" },
+  { id: "2137clicks", name: "2137", description: "Achieve 2137 clicks", goal: 2137, reward: "kremowka" },
 ];
 
 export function infiniteAchievement(n) {

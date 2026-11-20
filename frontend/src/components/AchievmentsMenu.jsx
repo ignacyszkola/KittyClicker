@@ -21,9 +21,9 @@ function Achievement({ title, description, goal, clicks, claim, claimed }) {
       </div>
       {done &&
         (claimed ? (
-          <span className="achievementClaimed">Odebrano</span>
+          <span className="achievementClaimed">Claimed</span>
         ) : (
-          <button className={`claimButton ${done ? "done" : ""}`}onClick={claim}>Odbierz</button>
+          <button className={`claimButton ${done ? "done" : ""}`}onClick={claim}>Claim</button>
         ))}
     </div>
   );
@@ -39,7 +39,7 @@ function AchievmentsMenu({ isOpen, close, clicks, claim, claimed }) {
 
   return (
     <div className={`achievmentsMenu ${isOpen ? "open" : ""}`}>
-      <h2>Osiągnięcia</h2>
+      <h2>Achievements</h2>
       <button onClick={close} className="closeButton">
         <img src={closeIcon} />
       </button>
@@ -60,7 +60,7 @@ function AchievmentsMenu({ isOpen, close, clicks, claim, claimed }) {
         <Achievement
           key={a.id}
           title={<>10<sup>{a.power}</sup></>}
-          description={<>Zdobądź 10<sup>{a.power}</sup> kliknięć</>}
+          description={<>Achieve 10<sup>{a.power}</sup> clicks</>}
           goal={a.goal}
           clicks={clicks}
           claim={() => claim(a)}

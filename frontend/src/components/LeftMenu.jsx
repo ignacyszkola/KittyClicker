@@ -9,19 +9,19 @@ function LeftMenu({ isOpen, achievmentsOpen, openAchievmentsMenu, itemsOpen, ope
     <div className={`leftMenu ${isOpen ? "open" : ""}`}>
       <button className={`achievmentsButton ${achievmentsOpen ? "active" : ""}`} onClick={openAchievmentsMenu}>
         <img src={trophyIcon} />
-        Osiągnięcia
+        Achievements
       </button>
       <button className={`itemsButton ${itemsOpen ? "active" : ""}`} onClick={openItemsMenu}>
         <img src={inventoryIcon} />
-        Itemy
+        Items
       </button>
       <button className={`catsButton ${catsOpen ? "active" : ""}`} onClick={openCatsMenu}>
         <img src={catIcon} />
-        Kot
+        Cat
       </button>
       <button className={`accountButton ${accountOpen ? "active" : ""}`} onClick={openAccountMenu}>
         <img src={accountIcon} />
-        Konto
+        Account
       </button>
     </div>
   );

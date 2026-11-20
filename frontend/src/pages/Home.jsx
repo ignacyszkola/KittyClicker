@@ -132,19 +132,19 @@ function Shop({ money, ownedCats, ownedUpgrades, buyCat, buyUpgrade }) {
   const [shopPage, setShopPage] = useState("cats");
   return (
     <div className="shop">
-      <h2>Sklep</h2>
+      <h2>Shop</h2>
       <div className="shopHeaderButtons">
         <button
           className={shopPage === "cats" ? "active" : ""}
           onClick={() => setShopPage("cats")}
         >
-          Koty
+          Cats
         </button>
         <button
           className={shopPage === "upgrades" ? "active" : ""}
           onClick={() => setShopPage("upgrades")}
         >
-          Ulepszenia
+          Upgrades
         </button>
       </div>
       <div className="shopContent">

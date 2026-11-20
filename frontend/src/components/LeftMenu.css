@@ -4,7 +4,7 @@
   position: fixed;
   top: 300px;
   gap: 40px;
-  width: 210px;
+  width: 240px;
   transform: translateX(-105%);
   transition: transform 0.3s ease;
   z-index: 2;

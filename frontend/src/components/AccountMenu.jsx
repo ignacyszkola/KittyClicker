@@ -12,8 +12,8 @@ function AccountMenu({ isOpen, close }) {
         <img src={closeIcon} alt="" />
       </button>
       <div className="accountDetails">
-        <h2>Dane konta</h2>
-        <label htmlFor="nazwaUzytkownika">Nazwa użytkownika</label>
+        <h2>Account Details</h2>
+        <label htmlFor="nazwaUzytkownika">Username</label>
         <input
           id="nazwaUzytkownika"
           type="text"
@@ -21,7 +21,7 @@ function AccountMenu({ isOpen, close }) {
           readOnly
         />
         <button className="logoutButton" onClick={logout}>
-          Wyloguj
+          Loggout
         </button>
       </div>
     </div>
