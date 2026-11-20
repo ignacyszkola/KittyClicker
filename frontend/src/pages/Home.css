@@ -243,13 +243,12 @@ body {
   width: 0;
   height: 0;
   pointer-events: none;
-  z-index: 40;
+  z-index: 1;
 }
 
 .popup {
   position: absolute;
-  left: var(--x);
-  top: var(--y);
+  translate: -50% -50%;
   white-space: nowrap;
   font-family: "Pacifico";
   font-size: 36px;
@@ -294,7 +293,7 @@ body {
   top: 300px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 100;
+  z-index: 10000000;
   margin: 0;
   color: red;
   font-size: 100px;

@@ -21,8 +21,10 @@ import moneyMultiCat from "../assets/moneyMultiCat.gif"
 import critMultiCat from "../assets/critMultiCat.webp"
 import critChanceMultiCat from "../assets/critChanceMultiCat.webp"
 import moneyDropChanceCat from "../assets/moneyDropChanceCat.webp"
-import { useGameSync } from "../useGameSync";
-import { ClickSender } from "../clickSender";
+import { GameSync } from "../GameSync";
+import { ClickSender } from "../ClickSender";
+import { GoldenCatLogic, GoldenCatReward, visibilityTime } from "../GoldenCatLogic";
+import GoldenCat from "../components/GoldenCat";
 
 
 function PlaySound(type) {
@@ -109,7 +111,7 @@ function ClickPopups({ popups }) {
         <span
           key={p.id}
           className={`popup ${p.type}`}
-          style={{ "--x": `${p.x}px`, "--y": `${p.y}px` }}
+          style={{ left: `${p.x}px`, top: `${p.y}px` }}
         >
           {p.text}
         </span>
@@ -220,13 +222,22 @@ function Home() {
 
   const gameState = { clicks, money, ownedCats, ownedUpgrades, ownedItems, claimed};
 
-  const { loaded, error, rateLimited } = useGameSync(gameState, (data) => {
+  const { loaded, error, rateLimited } = GameSync(gameState, (data) => {
     setClicks(data.clicks);
     setMoney(data.money);
     setOwnedCats(data.ownedCats);
     setOwnedUpgrades(data.ownedUpgrades);
     setOwnedItems(data.ownedItems);
     setClaimed(data.claimed);
+  });
+
+  const { location: goldeCatLocation, catchCat: catchGoldenCat } = GoldenCatLogic({
+    enabled: loaded && !error,
+    onReward: () => {
+      const reward = GoldenCatReward(money);
+      setMoney((m) => m + reward);
+      addPopups([{ type: "golden", text: `Golden Cat +${FormatNumber(reward)}` }]);
+    }
   });
 
   const boostMulti = activeBoosts.reduce((m, b) => m * b.boost, 1);
@@ -410,6 +421,7 @@ function Home() {
       />
       <CatBtn onClick={Click} image={selectedCat.image}/>
       <ClickPopups popups={popups} />
+      <GoldenCat location={goldeCatLocation} onCatch={catchGoldenCat} lifetime={visibilityTime} />
       <ClickCat ownedCats={ownedCats} />
       <MultiCat ownedCats={ownedCats}/>
       <MoneyMultiCat ownedCats={ownedCats} />
