@@ -75,7 +75,7 @@ public class User {
     public void setMoney(long money) {
         this.money = money;
     }
-    public void setClicks(int click){
-        this.clicks += click;
+    public void setClicks(long click){
+        this.clicks = click;
     }
 }

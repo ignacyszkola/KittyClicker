@@ -7,6 +7,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Map;
@@ -74,5 +75,20 @@ public class GlobalExceptionHandler {
         );
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+    }
+
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<ApiError> handleResponseStatus(
+            ResponseStatusException ex
+    ) {
+        HttpStatus status = HttpStatus.valueOf(ex.getStatusCode().value());
+
+        ApiError error = new ApiError(
+                ex.getReason() != null ? ex.getReason() : "Request failed",
+                status.value(),
+                Map.of()
+        );
+
+        return ResponseEntity.status(status).body(error);
     }
 }

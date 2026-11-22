@@ -45,11 +45,6 @@ public class UserController {
         return userService.deleteUserById(id);
     }
 
-    @PostMapping(value = "/{id}/click")
-    public UserActionResponse click(@PathVariable Long id) {
-        return userService.click(id);
-    }
-
     @PostMapping(value = "/login", produces = "application/json")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request){
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(userService.login(request));
