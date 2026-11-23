@@ -91,5 +91,5 @@ export function GameSync(state, applyState) {
     save();
   }, [purchasesKey, loaded, save]);
 
-  return { loaded, error, rateLimited };
+  return { loaded, error, rateLimited, saveNow: save };
 }

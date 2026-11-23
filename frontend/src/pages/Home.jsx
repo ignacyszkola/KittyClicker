@@ -23,7 +23,7 @@ import critChanceMultiCat from "../assets/critChanceMultiCat.webp"
 import moneyDropChanceCat from "../assets/moneyDropChanceCat.webp"
 import { GameSync } from "../GameSync";
 import { ClickSender } from "../ClickSender";
-import { GoldenCatLogic, GoldenCatReward, visibilityTime } from "../GoldenCatLogic";
+import { GoldenCatLogic } from "../GoldenCatLogic";
 import GoldenCat from "../components/GoldenCat";
 
 
@@ -222,7 +222,7 @@ function Home() {
 
   const gameState = { clicks, money, ownedCats, ownedUpgrades, ownedItems, claimed};
 
-  const { loaded, error, rateLimited } = GameSync(gameState, (data) => {
+  const { loaded, error, rateLimited, saveNow } = GameSync(gameState, (data) => {
     setClicks(data.clicks);
     setMoney(data.money);
     setOwnedCats(data.ownedCats);
@@ -233,11 +233,12 @@ function Home() {
 
   const { location: goldeCatLocation, catchCat: catchGoldenCat } = GoldenCatLogic({
     enabled: loaded && !error,
-    onReward: () => {
-      const reward = GoldenCatReward(money);
-      setMoney((m) => m + reward);
-      addPopups([{ type: "golden", text: `Golden Cat +${FormatNumber(reward)}` }]);
-    }
+    beforeClaim: saveNow,
+    onClaimed: ({ reward, amount, message }) => {
+      setMoney(amount);
+      addPopups([{ type: "golden", text: message || `Golden Cat +${FormatNumber(reward)}` }]);
+    },
+    onError: (err) => addPopups([{ type: "golden", text: err.message }]),
   });
 
   const boostMulti = activeBoosts.reduce((m, b) => m * b.boost, 1);
@@ -421,7 +422,7 @@ function Home() {
       />
       <CatBtn onClick={Click} image={selectedCat.image}/>
       <ClickPopups popups={popups} />
-      <GoldenCat location={goldeCatLocation} onCatch={catchGoldenCat} lifetime={visibilityTime} />
+      <GoldenCat location={goldeCatLocation} onCatch={catchGoldenCat}/>
       <ClickCat ownedCats={ownedCats} />
       <MultiCat ownedCats={ownedCats}/>
       <MoneyMultiCat ownedCats={ownedCats} />
