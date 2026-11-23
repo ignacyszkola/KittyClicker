@@ -63,15 +63,48 @@ public class ClickService {
             timestamps.addLast(now);
         }
 
-        user.setClicks(user.getClicks() + 1);
+        long chance = 1;
+        long drop = 1;
+        boolean moneyDrop = false;
+        boolean critDrop = false;
 
-        long moneyEarned = 1;
-        user.setMoney(user.getMoney() + moneyEarned);
+        if(user.getMoneyChanceDrop().isAvailable()){
+            chance += user.getMoneyChanceDrop().getBoost();
+        }
+
+        if(((int)(Math.random() * 101)) < chance){
+            if(user.getMoneyMultiplierDrop().isAvailable()){
+                drop += user.getMoneyMultiplierDrop().getBoost();
+            }
+            user.setMoney(user.getMoney() + drop);
+            moneyDrop = true;
+        }
+
+        chance = 1;
+        drop = 1;
+
+        if(user.getCritChanceDrop().isAvailable()){
+            chance += user.getCritChanceDrop().getBoost();
+        }
+
+        if(((int)(Math.random() * 101)) < chance) {
+            if (user.getCritMultiplierDrop().isAvailable()) {
+                drop += user.getCritMultiplierDrop().getBoost();
+            }
+            critDrop = true;
+        }
+
+        if(user.getPointsPerClick().isAvailable()){
+            drop += user.getPointsPerClick().getBoost();
+        }
+
+        user.setClicks(user.getClicks() + drop);
 
         return new ClickResponse(
                 user.getClicks(),
-                moneyEarned,
-                user.getMoney()
+                user.getMoney(),
+                moneyDrop,
+                critDrop
         );
     }
 }

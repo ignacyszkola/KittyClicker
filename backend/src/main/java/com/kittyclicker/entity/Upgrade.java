@@ -1,5 +1,6 @@
 package com.kittyclicker.entity;
 
+import com.kittyclicker.exception.TooHighLevelException;
 import jakarta.persistence.Embeddable;
 
 @Embeddable
@@ -44,6 +45,10 @@ public class Upgrade {
     public void levelUp(UpgradeType type) {
         if (!this.available) {
             throw new IllegalStateException("Upgrade hasn't been purchased");
+        }
+
+        if ((type == UpgradeType.CRIT_CHANCE || type == UpgradeType.MONEY_CHANCE) && level >= 100) {
+            throw new TooHighLevelException("This upgrade can't exceed level 100");
         }
 
         this.level++;
