@@ -5,6 +5,7 @@ import com.kittyclicker.entity.User;
 import com.kittyclicker.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
@@ -23,11 +24,17 @@ public class GoldenCatService {
     }
 
     public synchronized Instant startEvent(Long userId) {
-        if (activeEvents.containsKey(userId)) {
+
+        Instant existingExpiry = activeEvents.get(userId);
+
+        if (existingExpiry != null && Instant.now().isBefore(existingExpiry)) {
             throw new ResponseStatusException(
-                    HttpStatus.CONFLICT, "Golden Cat is already active"
+                    HttpStatus.CONFLICT,
+                    "Golden Cat is already active"
             );
         }
+
+        activeEvents.remove(userId);
 
         Instant expiresAt = Instant.now().plusSeconds(1);
         activeEvents.put(userId, expiresAt);
@@ -35,12 +42,15 @@ public class GoldenCatService {
         return expiresAt;
     }
 
+    @Transactional
     public synchronized GoldenCatClaimResponse claimEvent(Long userId) {
+
         Instant expiresAt = activeEvents.get(userId);
 
         if (expiresAt == null) {
             throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "No active Golden Cat"
+                    HttpStatus.NOT_FOUND,
+                    "No active Golden Cat"
             );
         }
 
@@ -48,7 +58,8 @@ public class GoldenCatService {
             activeEvents.remove(userId);
 
             throw new ResponseStatusException(
-                    HttpStatus.GONE, "Golden Cat has expired"
+                    HttpStatus.GONE,
+                    "Golden Cat has expired"
             );
         }
 
@@ -56,14 +67,14 @@ public class GoldenCatService {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "User not found"
+                        HttpStatus.NOT_FOUND,
+                        "User not found"
                 ));
 
         long digits = String.valueOf(user.getClicks()).length();
         long reward = 2 + digits * 2;
 
         user.setMoney(user.getMoney() + reward);
-        userRepository.save(user);
 
         return new GoldenCatClaimResponse(
                 reward,

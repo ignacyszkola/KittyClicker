@@ -2,6 +2,6 @@ package com.kittyclicker.dto;
 
 public record GoldenCatClaimResponse(
         long reward,
-        long money,
+        long amount,
         String message
 ) {}
