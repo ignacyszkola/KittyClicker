@@ -2,9 +2,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useAuth } from "./useAuth";
 import { apiFetch } from "./api/client";
 
-const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-
 export async function goldenCatAppear(token) {
   const data = await apiFetch("/api/golden-cat/appear", { token, method: "POST" });
   if (Number.isNaN(Date.parse(data.expiresAt))) {
