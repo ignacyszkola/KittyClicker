@@ -21,9 +21,9 @@ import moneyMultiCat from "../assets/moneyMultiCat.gif"
 import critMultiCat from "../assets/critMultiCat.webp"
 import critChanceMultiCat from "../assets/critChanceMultiCat.webp"
 import moneyDropChanceCat from "../assets/moneyDropChanceCat.webp"
-import { GameSync } from "../GameSync";
-import { ClickSender } from "../ClickSender";
-import { GoldenCatLogic } from "../GoldenCatLogic";
+import { useGameSync } from "../useGameSync";
+import { useClickSender } from "../useClickSender";
+import { useGoldenCat } from "../useGoldenCat";
 import GoldenCat from "../components/GoldenCat";
 
 
@@ -218,11 +218,11 @@ function Home() {
   const [claimed, setClaimed] = useState({});
   const [selectedCat, setSelectedCat] = useState({image: cat});
 
-  const { send: sendClickToServer, limited } = ClickSender();
+  const { send: sendClickToServer, limited } = useClickSender();
 
   const gameState = { clicks, money, ownedCats, ownedUpgrades, ownedItems, claimed};
 
-  const { loaded, error, rateLimited, saveNow } = GameSync(gameState, (data) => {
+  const { loaded, error, rateLimited, saveNow } = useGameSync(gameState, (data) => {
     setClicks(data.clicks);
     setMoney(data.money);
     setOwnedCats(data.ownedCats);
@@ -231,7 +231,7 @@ function Home() {
     setClaimed(data.claimed);
   });
 
-  const { location: goldeCatLocation, catchCat: catchGoldenCat } = GoldenCatLogic({
+  const { location: goldeCatLocation, catchCat: catchGoldenCat } = useGoldenCat({
     enabled: loaded && !error,
     beforeClaim: saveNow,
     onClaimed: ({ reward, amount, message }) => {

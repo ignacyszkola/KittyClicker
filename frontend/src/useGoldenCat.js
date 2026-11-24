@@ -29,7 +29,7 @@ const maxAppearTime = 180_000;
 
 const rand = (min, max) => min + Math.random() * (max - min);
 
-export function GoldenCatLogic({ enabled, beforeClaim, onClaimed, onError, minDelay = minAppearTime, maxDelay = maxAppearTime }) {
+export function useGoldenCat({ enabled, beforeClaim, onClaimed, onError, minDelay = minAppearTime, maxDelay = maxAppearTime }) {
   const { token } = useAuth();
   const [location, setLocation] = useState(null);
   const [resetTimer, setResetTimer] = useState(0);

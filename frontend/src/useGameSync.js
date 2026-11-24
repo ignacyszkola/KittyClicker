@@ -4,7 +4,7 @@ import { loadGame, saveGame, saveGameOnExit, toSaveBody } from "./api/game";
 
 const SAVE_INTERVAL = 30000;
 
-export function GameSync(state, applyState) {
+export function useGameSync(state, applyState) {
   const { token } = useAuth();
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState("");

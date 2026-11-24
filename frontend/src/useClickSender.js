@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useAuth } from "./useAuth";
 import { sendClick } from "./api/game";
 
-export function ClickSender() {
+export function useClickSender() {
   const { token } = useAuth();
   const [limited, setLimited] = useState(false);
   const timerRef = useRef(null);
