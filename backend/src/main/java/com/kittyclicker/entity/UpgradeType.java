@@ -5,5 +5,7 @@ public enum UpgradeType {
     MONEY_CHANCE,
     CRIT_CHANCE,
     MONEY_MULTIPLIER,
-    CRIT_MULTIPLIER
+    CRIT_MULTIPLIER,
+
+    PASSIVE_CAT
 }

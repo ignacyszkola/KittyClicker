@@ -1,6 +1,7 @@
 package com.kittyclicker.service;
 
 import com.kittyclicker.dto.UserActionResponse;
+import com.kittyclicker.entity.PassiveCat;
 import com.kittyclicker.entity.Upgrade;
 import com.kittyclicker.entity.UpgradeType;
 import com.kittyclicker.entity.User;
@@ -9,6 +10,7 @@ import com.kittyclicker.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.InvalidParameterException;
 import java.util.NoSuchElementException;
 
 @Service
@@ -20,28 +22,43 @@ public class UpgradeService {
         this.userRepository = userRepository;
     }
 
-    private long calculateCost(Upgrade upgrade) {
-        return (long) Math.ceil(1 + upgrade.getLevel() * 1.5);
+    private long calculateCost(int level) {
+        return (long) Math.ceil(1 + level * 1.5);
     }
 
     @Transactional
     public UserActionResponse upgrade(Long userId, UpgradeType type){
         User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("User not found"));
 
-        Upgrade upgrade = user.getUpgrade(type);
-        long cost = calculateCost(upgrade);
-        if(user.getMoney() < cost){
-            throw new NotEnoughMaterialException("You don't have enough money");
+        if(type == UpgradeType.PASSIVE_CAT && user.getPassiveCat() == null){
+            throw new InvalidParameterException("You do not own a Passive Cat");
+        }
+        else if(type == UpgradeType.PASSIVE_CAT && user.getPassiveCat() != null){
+            PassiveCat passiveCat = user.getPassiveCat();
+            long cost = calculateCost(passiveCat.getLevel());
+
+            if(user.getMoney() < cost){
+                throw new NotEnoughMaterialException("You don't have enough money");
+            }
+            user.setMoney(user.getMoney() - cost);
+
+            passiveCat.upgrade();
+            userRepository.save(user);
         }
 
-        user.setMoney(user.getMoney() - cost);
+        else {
+            Upgrade upgrade = user.getUpgrade(type);
+            long cost = calculateCost(upgrade.getLevel());
+            if (user.getMoney() < cost) {
+                throw new NotEnoughMaterialException("You don't have enough money");
+            }
 
-        upgrade.levelUp(type);
-        userRepository.save(user);
+            user.setMoney(user.getMoney() - cost);
 
-        return new UserActionResponse(userId, user.getUsername(), "upgraded successfully");
+            upgrade.levelUp(type);
+            userRepository.save(user);
+        }
+
+        return new UserActionResponse(userId, user.getUsername(), "You successfully upgraded " + type);
     }
-
-
-
 }

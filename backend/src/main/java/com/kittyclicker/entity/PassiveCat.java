@@ -108,4 +108,32 @@ public class PassiveCat {
     public Upgrade getCritMultiplierDrop() {
         return critMultiplierDrop;
     }
+
+    public void upgrade(){
+        level++;
+        cps += 0.125;
+
+        boolean upgraded = false;
+
+        if(level % 2 == 0){
+            moneyMultiplierDrop.setBoost(moneyMultiplierDrop.getBoost() + 1);
+            critMultiplierDrop.setBoost(critMultiplierDrop.getBoost() + 1);
+            moneyMultiplierDrop.setLevel(moneyMultiplierDrop.getLevel() + 1);
+            critMultiplierDrop.setLevel(critMultiplierDrop.getLevel() + 1);
+            upgraded = true;
+        }
+
+        if(level % 3 == 0 && moneyChanceDrop.getLevel() < 100){
+            moneyChanceDrop.setBoost(moneyChanceDrop.getBoost() + 1);
+            critChanceDrop.setBoost(critChanceDrop.getBoost() + 1);
+            moneyChanceDrop.setLevel(moneyChanceDrop.getLevel() + 1);
+            critChanceDrop.setLevel(critChanceDrop.getLevel() + 1);
+            upgraded = true;
+        }
+
+        if(!upgraded){
+            pointsPerClick.setBoost(pointsPerClick.getBoost() + 1);
+            pointsPerClick.setLevel(pointsPerClick.getLevel() + 1);
+        }
+    }
 }

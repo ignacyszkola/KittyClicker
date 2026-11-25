@@ -2,6 +2,8 @@ package com.kittyclicker.entity;
 
 import com.kittyclicker.converter.InstantStringConverter;
 import jakarta.persistence.*;
+
+import java.security.InvalidParameterException;
 import java.time.Instant;
 
 import java.util.ArrayList;
@@ -223,6 +225,8 @@ public class User {
             case CRIT_CHANCE -> critChanceDrop;
             case MONEY_MULTIPLIER -> moneyMultiplierDrop;
             case CRIT_MULTIPLIER -> critMultiplierDrop;
+            case PASSIVE_CAT -> null;
+            default -> throw new InvalidParameterException("This cat doesn't exist");
         };
     }
 

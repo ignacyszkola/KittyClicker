@@ -1,12 +1,13 @@
 package com.kittyclicker.entity;
 
+import com.kittyclicker.exception.InvalidCredentialsException;
 import com.kittyclicker.exception.TooHighLevelException;
 import jakarta.persistence.Embeddable;
 
 @Embeddable
 public class Upgrade {
 
-    private int level = 0;
+    private int level = 1;
     private long boost = 1;
     private boolean available = false;
 
