@@ -5,6 +5,8 @@ public record ClickResponse(
         long clicks,
         long totalMoney,
         boolean didMoneyDrop,
-        boolean didCritDrop
+        boolean didCritDrop,
+        boolean isAchievementUnlocked,
+        String itemReceivedName
 ) {
 }

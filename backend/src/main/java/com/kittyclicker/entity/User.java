@@ -1,6 +1,7 @@
 package com.kittyclicker.entity;
 
 import jakarta.persistence.*;
+import java.time.Instant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,6 +77,12 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<InventoryItem> inventoryItems = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "active_item_id")
+    private Item activeItem;
+
+    private Instant activeItemExpiresAt;
 
     // Achievements
 
@@ -175,6 +182,22 @@ public class User {
         return inventoryItems;
     }
 
+    public Item getActiveItem(){
+        return activeItem;
+    }
+
+    public Instant getActiveItemExpiresAt(){
+        return activeItemExpiresAt;
+    }
+
+    public void setActiveItem(Item activeItem) {
+        this.activeItem = activeItem;
+    }
+
+    public void setActiveItemExpiresAt(Instant activeItemExpiresAt) {
+        this.activeItemExpiresAt = activeItemExpiresAt;
+    }
+
     public List<UserAchievement> getAchievements() {
         return achievements;
     }
@@ -199,6 +222,10 @@ public class User {
             case MONEY_MULTIPLIER -> moneyMultiplierDrop;
             case CRIT_MULTIPLIER -> critMultiplierDrop;
         };
+    }
+
+    public void setAchievement(UserAchievement userAchievement){
+        achievements.add(userAchievement);
     }
 
 }

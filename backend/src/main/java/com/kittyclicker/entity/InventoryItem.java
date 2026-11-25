@@ -52,4 +52,16 @@ public class InventoryItem {
     public int getQuantity() {
         return quantity;
     }
+
+    public void consume() {
+        if (quantity <= 0) {
+            throw new IllegalStateException("No items left");
+        }
+
+        quantity--;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 }

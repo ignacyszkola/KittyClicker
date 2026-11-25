@@ -18,9 +18,7 @@ import java.util.stream.Collectors;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiError> handleValidation(
-            MethodArgumentNotValidException ex
-    ){
+    public ResponseEntity<ApiError> handleValidation(MethodArgumentNotValidException ex){
 
         List<FieldError> errors = ex.getBindingResult().getFieldErrors();
 
@@ -39,9 +37,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ApiError> handleIllegalArgument(
-            IllegalArgumentException ex
-    ){
+    public ResponseEntity<ApiError> handleIllegalArgument(IllegalArgumentException ex){
 
         ApiError error = new ApiError(
                 "Illegal Data",
@@ -52,9 +48,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<ApiError> handle404Error(
-            NoSuchElementException ex
-    ){
+    public ResponseEntity<ApiError> handle404Error(NoSuchElementException ex){
 
         ApiError error = new ApiError(
                 ex.getMessage() != null ? ex.getMessage() : "Not found, error 404",
@@ -65,9 +59,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(InvalidCredentialsException.class)
-    public ResponseEntity<ApiError> handleUnauthorized(
-            InvalidCredentialsException ex
-    ){
+    public ResponseEntity<ApiError> handleUnauthorized(InvalidCredentialsException ex){
 
         ApiError error = new ApiError(
                 ex.getMessage(),
@@ -78,9 +70,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ResponseStatusException.class)
-    public ResponseEntity<ApiError> handleResponseStatus(
-            ResponseStatusException ex
-    ) {
+    public ResponseEntity<ApiError> handleResponseStatus(ResponseStatusException ex) {
+
         HttpStatus status = HttpStatus.valueOf(ex.getStatusCode().value());
 
         ApiError error = new ApiError(

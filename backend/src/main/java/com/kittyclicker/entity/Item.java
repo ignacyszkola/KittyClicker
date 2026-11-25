@@ -35,8 +35,7 @@ public class Item {
 
     protected Item() {}
 
-    public Item(String code, String name, String imagePath,
-                long boostMultiplier, int durationSeconds) {
+    public Item(String code, String name, String imagePath, long boostMultiplier, int durationSeconds) {
         this.code = code;
         this.name = name;
         this.imagePath = imagePath;

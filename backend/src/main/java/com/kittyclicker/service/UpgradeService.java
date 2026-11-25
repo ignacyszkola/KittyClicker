@@ -4,7 +4,7 @@ import com.kittyclicker.dto.UserActionResponse;
 import com.kittyclicker.entity.Upgrade;
 import com.kittyclicker.entity.UpgradeType;
 import com.kittyclicker.entity.User;
-import com.kittyclicker.exception.NotEnoughMoneyException;
+import com.kittyclicker.exception.NotEnoughMaterialException;
 import com.kittyclicker.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +31,7 @@ public class UpgradeService {
         Upgrade upgrade = user.getUpgrade(type);
         long cost = calculateCost(upgrade);
         if(user.getMoney() < cost){
-            throw new NotEnoughMoneyException("You don't have enough money");
+            throw new NotEnoughMaterialException("You don't have enough money");
         }
 
         user.setMoney(user.getMoney() - cost);
