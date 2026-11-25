@@ -59,4 +59,9 @@ public class UserController {
     public UserActionResponse useItem(@PathVariable Long userId, @PathVariable Long itemId){
         return itemService.useItem(userId, itemId);
     }
+
+    @PatchMapping(value="/api/users/{userId}/skin", produces = "application/json")
+    public SelectedCatResponse selectClickableCat(@PathVariable Long userId, @RequestBody Long skinId){
+        return userService.selectClickableCat(userId, skinId);
+    }
 }

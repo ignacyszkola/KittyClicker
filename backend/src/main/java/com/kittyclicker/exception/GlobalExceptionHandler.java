@@ -82,4 +82,16 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(status).body(error);
     }
+
+    @ExceptionHandler(NotEnoughMaterialException.class)
+    public ResponseEntity<ApiError> handleNotEnoughMaterial(NotEnoughMaterialException ex) {
+
+        ApiError error = new ApiError(
+                ex.getMessage(),
+                409,
+                Map.of()
+        );
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
 }

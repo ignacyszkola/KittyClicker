@@ -1,5 +1,6 @@
 package com.kittyclicker.entity;
 
+import com.kittyclicker.exception.NotEnoughMaterialException;
 import jakarta.persistence.*;
 
 @Entity
@@ -55,7 +56,7 @@ public class InventoryItem {
 
     public void consume() {
         if (quantity <= 0) {
-            throw new IllegalStateException("No items left");
+            throw new NotEnoughMaterialException("You do not have this item");
         }
 
         quantity--;

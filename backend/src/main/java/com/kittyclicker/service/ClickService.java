@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.Instant;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
@@ -156,6 +157,10 @@ public class ClickService {
 
         if (user.getPointsPerClick().isAvailable()) {
             drop += user.getPointsPerClick().getBoost();
+        }
+
+        if(user.getActiveItem() != null && user.getActiveItemExpiresAt().isAfter(Instant.now())){
+            drop *= user.getActiveItem().getBoostMultiplier();
         }
 
         user.setClicks(user.getClicks() + drop);

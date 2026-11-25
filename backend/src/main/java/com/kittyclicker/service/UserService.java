@@ -1,8 +1,11 @@
 package com.kittyclicker.service;
 
 import com.kittyclicker.dto.*;
+import com.kittyclicker.entity.CatSkin;
 import com.kittyclicker.entity.User;
 import com.kittyclicker.exception.InvalidCredentialsException;
+import com.kittyclicker.repository.CatSkinRepository;
+import com.kittyclicker.repository.UserCatSkinRepository;
 import com.kittyclicker.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,12 +21,16 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final UserCatSkinRepository userCatSkinRepository;
+    private final CatSkinRepository catSkinRepository;
 
-
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService,
+                       UserCatSkinRepository userCatSkinRepository, CatSkinRepository catSkinRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
+        this.userCatSkinRepository = userCatSkinRepository;
+        this.catSkinRepository = catSkinRepository;
     }
 
     public UserActionResponse register(UserRegistrationRequest request){
@@ -119,10 +126,7 @@ public class UserService {
      public LoginResponse login(LoginRequest request) {
         User user = userRepository.findByUsername(request.username()).orElseThrow(() -> new InvalidCredentialsException());
 
-        if (!passwordEncoder.matches(
-                request.password(),
-                user.getHashedPassword()
-        )) {
+        if (!passwordEncoder.matches(request.password(), user.getHashedPassword())) {
             throw new InvalidCredentialsException();
         }
 
@@ -134,6 +138,20 @@ public class UserService {
                 token,
                 "Bearer"
         );
+    }
+
+    @Transactional
+    public SelectedCatResponse selectClickableCat(Long userId, Long skinId){
+        if(!userCatSkinRepository.existsByUserIdAndCatSkinId(userId, skinId)){
+            throw new NoSuchElementException("You do not have this skin");
+        }
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("User not found"));
+        CatSkin choseSkin = catSkinRepository.findById(skinId).orElseThrow(() -> new NoSuchElementException("Skin not found"));
+
+        user.setSelectedSkin(choseSkin);
+
+        return new SelectedCatResponse("Cat skin selected successfully", choseSkin.getId());
     }
 
 }

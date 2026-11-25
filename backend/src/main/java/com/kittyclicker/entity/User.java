@@ -1,5 +1,6 @@
 package com.kittyclicker.entity;
 
+import com.kittyclicker.converter.InstantStringConverter;
 import jakarta.persistence.*;
 import java.time.Instant;
 
@@ -82,6 +83,7 @@ public class User {
     @JoinColumn(name = "active_item_id")
     private Item activeItem;
 
+    @Convert(converter = InstantStringConverter.class)
     private Instant activeItemExpiresAt;
 
     // Achievements
