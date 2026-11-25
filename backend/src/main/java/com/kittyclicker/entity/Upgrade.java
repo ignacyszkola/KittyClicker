@@ -39,7 +39,6 @@ public class Upgrade {
             throw new IllegalStateException("Upgrade already purchased");
         }
 
-        this.level = 1;
         this.available = true;
     }
 

@@ -226,7 +226,6 @@ public class User {
             case MONEY_MULTIPLIER -> moneyMultiplierDrop;
             case CRIT_MULTIPLIER -> critMultiplierDrop;
             case PASSIVE_CAT -> null;
-            default -> throw new InvalidParameterException("This cat doesn't exist");
         };
     }
 

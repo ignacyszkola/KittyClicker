@@ -136,4 +136,12 @@ public class PassiveCat {
             pointsPerClick.setLevel(pointsPerClick.getLevel() + 1);
         }
     }
+
+    public void avaiableUpgrades(){
+        pointsPerClick.purchase();
+        moneyChanceDrop.purchase();
+        critChanceDrop.purchase();
+        moneyMultiplierDrop.purchase();
+        critMultiplierDrop.purchase();
+    }
 }
