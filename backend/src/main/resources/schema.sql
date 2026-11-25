@@ -83,12 +83,12 @@ CREATE TABLE IF NOT EXISTS passive_cats (
 CREATE TABLE IF NOT EXISTS user_cat_skins (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
-    skin_id INTEGER NOT NULL,
+    cat_skin_id INTEGER NOT NULL,
     unlocked_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    UNIQUE (user_id, skin_id),
+    UNIQUE (user_id, cat_skin_id),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (skin_id) REFERENCES cat_skins(id)
+    FOREIGN KEY (cat_skin_id) REFERENCES cat_skins(id)
 );
 
 CREATE TABLE IF NOT EXISTS inventory_items (

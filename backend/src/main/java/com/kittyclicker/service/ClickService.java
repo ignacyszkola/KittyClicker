@@ -79,8 +79,7 @@ public class ClickService {
                         (user.getId(), rewardItem.getId()).orElse(null);
 
                 if (inventoryItem == null) {
-                    inventoryItemRepository.save(new InventoryItem(user, rewardItem, 1)
-                    );
+                    inventoryItemRepository.save(new InventoryItem(user, rewardItem, 1));
                 } else {
                     inventoryItem.setQuantity(inventoryItem.getQuantity() + 1);
                 }
@@ -95,10 +94,7 @@ public class ClickService {
             }
         }
 
-        return new AchievementResult(
-                achievementUnlocked,
-                itemReceivedName
-        );
+        return new AchievementResult(achievementUnlocked, itemReceivedName);
     }
 
     @Transactional
