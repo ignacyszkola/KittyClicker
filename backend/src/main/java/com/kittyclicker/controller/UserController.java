@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.kittyclicker.security.CurrentUser;
 
 import java.util.Map;
 
@@ -16,10 +17,12 @@ public class UserController {
 
     private final UserService userService;
     private final ItemService itemService;
+    private final CurrentUser currentUser;
 
-    public UserController(UserService userService, ItemService itemService){
+    public UserController(UserService userService, ItemService itemService, CurrentUser currentUser){
         this.userService = userService;
         this.itemService = itemService;
+        this.currentUser = currentUser;
     }
 
     @PostMapping(value = "/register", produces = "application/json")
@@ -45,5 +48,10 @@ public class UserController {
     @PatchMapping(value="/api/users/{userId}/skin", produces = "application/json")
     public SelectedCatResponse selectClickableCat(@PathVariable Long userId, @RequestBody Long skinId){
         return userService.selectClickableCat(userId, skinId);
+    }
+
+    @GetMapping("/auth/me")
+    public Map<String, String> getCurrentUser() {
+        return userService.getCurrentUser(currentUser.getId());
     }
 }

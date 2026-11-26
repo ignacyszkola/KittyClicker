@@ -154,4 +154,9 @@ public class UserService {
         return new SelectedCatResponse("Cat skin selected successfully", choseSkin.getId());
     }
 
+    public Map<String, String> getCurrentUser(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("User not found"));
+
+        return Map.of("username", user.getUsername());
+    }
 }
