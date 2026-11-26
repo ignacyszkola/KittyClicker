@@ -94,4 +94,16 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ApiError> handleIllegalState(IllegalStateException ex){
+
+        ApiError error = new ApiError(
+                ex.getMessage(),
+                409,
+                Map.of()
+        );
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
 }

@@ -30,6 +30,11 @@ public class UpgradeService {
     public UserActionResponse upgrade(Long userId, UpgradeType type){
         User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("User not found"));
 
+        if(type == null){
+            throw new InvalidParameterException("Invalid upgrade type");
+        }
+
+
         if(type == UpgradeType.PASSIVE_CAT && user.getPassiveCat() == null){
             throw new InvalidParameterException("You do not own a Passive Cat");
         }

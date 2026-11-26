@@ -27,27 +27,9 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.register(request));
     }
 
-    @GetMapping(value = "/status", produces = "application/json")
-    public Map<String, String> response(){
-        return Map.of(
-                "status", "operational",
-                "message", "KittyClicker API is running"
-        );
-    }
-
     @GetMapping(value = "/{id}")
     public UserBalanceResponse getUserById(@PathVariable Long id){
         return userService.getUserById(id);
-    }
-
-    @PatchMapping(value = "/{id}/money", produces = "application/json")
-    public UserBalanceResponse addMoney(@PathVariable Long id, @Valid @RequestBody AmountRequest amount){
-        return userService.addMoney(id, amount.amount());
-    }
-
-    @DeleteMapping(value = "/{id}")
-    public UserActionResponse deleteUserById(@PathVariable Long id){
-        return userService.deleteUserById(id);
     }
 
     @PostMapping(value = "/login", produces = "application/json")
