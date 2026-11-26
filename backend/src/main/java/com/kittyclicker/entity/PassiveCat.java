@@ -1,6 +1,9 @@
 package com.kittyclicker.entity;
 
+import com.kittyclicker.converter.InstantStringConverter;
 import jakarta.persistence.*;
+
+import java.time.Instant;
 
 @Entity
 @Table(name = "passive_cats")
@@ -58,7 +61,12 @@ public class PassiveCat {
     })
     private Upgrade critMultiplierDrop = new Upgrade();
 
+    @Convert(converter = InstantStringConverter.class)
+    @Column(name = "last_generation_at")
+    private Instant lastGenerationAt;
+
     public PassiveCat() {
+        this.lastGenerationAt = Instant.now();
     }
 
     public Long getId() {
@@ -143,5 +151,13 @@ public class PassiveCat {
         critChanceDrop.purchase();
         moneyMultiplierDrop.purchase();
         critMultiplierDrop.purchase();
+    }
+
+    public Instant getLastGenerationAt() {
+        return lastGenerationAt;
+    }
+
+    public void setLastGenerationAt(Instant lastGenerationAt) {
+        this.lastGenerationAt = lastGenerationAt;
     }
 }

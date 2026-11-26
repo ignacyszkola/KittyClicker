@@ -97,6 +97,69 @@ public class ClickService {
         return new AchievementResult(achievementUnlocked, itemReceivedName);
     }
 
+    private void generatePassiveClicks(User user, Instant now) {
+        PassiveCat cat = user.getPassiveCat();
+
+        if (cat == null) {
+            return;
+        }
+
+        Instant last = cat.getLastGenerationAt();
+
+        if (last == null) {
+            cat.setLastGenerationAt(now);
+            return;
+        }
+
+        long elapsedNanos = java.time.Duration.between(last, now).toNanos();
+        long generatedClicks = (long) (cat.getCps() * elapsedNanos / 1_000_000_000.0);
+
+        if (generatedClicks <= 0) {
+            return;
+        }
+
+        long drop = 0;
+        long chance = 1;
+
+        for (long i = 0; i < generatedClicks; i++) {
+            if (cat.getMoneyChanceDrop().isAvailable()) {
+                chance += cat.getMoneyChanceDrop().getBoost();
+            }
+
+            if ((int) (Math.random() * 101) < chance) {
+                if (cat.getMoneyMultiplierDrop().isAvailable()) {
+                    drop += cat.getMoneyMultiplierDrop().getBoost();
+                }
+                user.setMoney(user.getMoney() + drop);
+            }
+
+            drop = 0;
+            chance = 1;
+
+            if (cat.getCritChanceDrop().isAvailable()) {
+                chance += cat.getCritChanceDrop().getBoost();
+            }
+
+            if ((int) (Math.random() * 101) < chance) {
+                if (cat.getCritMultiplierDrop().isAvailable()) {
+                    drop += cat.getCritMultiplierDrop().getBoost();
+                }
+            }
+
+            if (cat.getPointsPerClick().isAvailable()) {
+                drop += cat.getPointsPerClick().getBoost();
+            }
+
+            user.setClicks(user.getClicks() + drop);
+
+            drop = 1;
+        }
+
+        long processedNanos = (long) (generatedClicks * 1_000_000_000.0 / cat.getCps());
+        cat.setLastGenerationAt(last.plusNanos(processedNanos));
+    }
+
+
     @Transactional
     public ClickResponse click(Long userId) {
 
@@ -165,6 +228,7 @@ public class ClickService {
         user.setClicks(user.getClicks() + drop);
 
         AchievementResult achievementResult = checkAchievements(user);
+        generatePassiveClicks(user, Instant.now());
 
         return new ClickResponse(
                 user.getClicks(),
