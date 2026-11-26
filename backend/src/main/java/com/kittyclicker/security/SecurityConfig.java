@@ -30,8 +30,8 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST,
-                                "/api/users/register",
-                                "/api/users/login"
+                                "/api/auth/register",
+                                "/api/auth/login"
                         ).permitAll()
                         .requestMatchers(HttpMethod.GET,
                                 "/api/users/status"

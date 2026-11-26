@@ -1,8 +1,8 @@
 package com.kittyclicker.dto;
 
+import java.util.Map;
+
 public record LoginResponse(
-        Long userId,
-        String username,
         String token,
-        String tokenType
+        Map<String, String> user
 ) {}

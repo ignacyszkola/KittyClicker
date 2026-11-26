@@ -132,12 +132,10 @@ public class UserService {
 
         String token = jwtService.generateToken(user.getId());
 
-        return new LoginResponse(
-                user.getId(),
-                user.getUsername(),
-                token,
-                "Bearer"
-        );
+         return new LoginResponse(
+                 token,
+                 Map.of("username", user.getUsername())
+         );
     }
 
     @Transactional
