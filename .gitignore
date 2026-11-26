@@ -1,0 +1,11 @@
+**/*.db
+**/*.db.backup
+backend/src/main/resources/data.sql
+
+**/.env
+
+**/target/
+**/.mvn/wrapper/maven-wrapper.jar
+
+.idea/
+*.iml
