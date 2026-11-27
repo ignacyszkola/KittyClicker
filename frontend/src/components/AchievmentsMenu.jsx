@@ -1,0 +1,72 @@
+import "./AchievmentsMenu.css";
+import closeIcon from "../assets/close.svg";
+import {
+  singleCompleteAchievements,
+  infiniteAchievement,
+  reachedAchievementLvl,
+} from "../utils/achievements";
+
+function Achievement({ title, description, goal, clicks, claimed }) {
+  const done = clicks >= goal;
+  const progress = Math.min(100, (clicks / goal) * 100);
+
+  return (
+    <div className={`achievement ${done ? "done" : ""}`}>
+      <span className="achievTitle">{title}</span>
+      <span className="achievDesc">{description}</span>
+      <span className="achievProgress">{clicks} / {goal}</span>
+      <div className="achievementBar">
+        <div className="achievementBarFill" style={{ width: `${progress}%` }} />
+      </div>
+      {done &&
+        (claimed ? (
+          <span className="achievementClaimed">Claimed</span>
+        ) : (
+          <span className="achievementClaimed">Reward is automatic</span>
+        ))}
+    </div>
+  );
+}
+
+function AchievmentsMenu({ isOpen, close, clicks, claimed }) {
+  const reached = reachedAchievementLvl(clicks);
+  const next = infiniteAchievement(reached + 1);
+
+  const reachedList = Array.from({ length: reached }, (_, i) => infiniteAchievement(i + 1));
+  const unclaimed = reachedList.filter((a) => !claimed[a.id]);
+  const recentlyClaimed = reachedList.filter((a) => claimed[a.id]).slice(-3).reverse();
+
+  return (
+    <div className={`achievmentsMenu ${isOpen ? "open" : ""}`}>
+      <h2>Achievements</h2>
+      <button onClick={close} className="closeButton">
+        <img src={closeIcon} />
+      </button>
+      <div className="achievementsList">
+      {singleCompleteAchievements.map((a) => (
+        <Achievement
+          key={a.id}
+          title={a.name}
+          description={a.description}
+          goal={a.goal}
+          clicks={clicks}
+          claimed={claimed[a.id]}
+        />
+      ))}
+
+      {[...unclaimed, next, ...recentlyClaimed].map((a) => (
+        <Achievement
+          key={a.id}
+          title={<>10<sup>{a.power}</sup></>}
+          description={<>Achieve 10<sup>{a.power}</sup> clicks</>}
+          goal={a.goal}
+          clicks={clicks}
+          claimed={claimed[a.id]}
+        />
+      ))}
+    </div>
+    </div>
+  );
+}
+
+export default AchievmentsMenu;

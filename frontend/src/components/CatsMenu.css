@@ -1,0 +1,94 @@
+.catsMenu {
+  width: 1122px;
+  height: 704px;
+  border-radius: 25px;
+  border: white solid 6px;
+  background-color: #ef81ba;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    transform 0.25s ease,
+    opacity 0.25s ease;
+  z-index: 2;
+}
+
+.catsMenu.open {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+  pointer-events: all;
+}
+
+.catsMenu h2 {
+  font-family: "Pacifico";
+  text-align: center;
+  font-size: 55px;
+  color: white;
+  margin: 0;
+  font-weight: 2;
+}
+
+.closeButton {
+  background-color: #f369b0;
+  border-top-right-radius: 19px;
+  border: none;
+  height: 100px;
+  width: 100px;
+  float: right;
+  position: fixed;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+}
+
+.closeButton:hover {
+  background-color: #f356a7;
+}
+
+.closeButton img {
+  width: 80px;
+  height: 80px;
+}
+
+.catList {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 80px;
+  margin-top: 20px;
+  height: 570px;
+  
+}
+
+.cat {
+  background-color: #ffb7ce;
+  border: white solid 3px;
+  border-radius: 25px;
+  color: white;
+  font-family: "Pacifico";
+  text-align: center;
+  font-size: 35px;
+}
+
+.cat button {
+  background: none;
+  border: none;
+  color: #3ddc4a;
+  font-size: 40px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.cat hr {
+  background-color: white;
+  border: none;
+  height: 3px;
+}
+
+.cat img {
+  height: 250px;
+  width: 250px;
+}
