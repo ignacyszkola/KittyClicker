@@ -7,6 +7,7 @@ import floppaCat from "../assets/flop.webp"
 export const cats = [
   {
     id: "clickCat",
+    apiType: "POINTS_PER_CLICK",
     name: "Clicking cat",
     clickPower: 1,
     clickSpeed: 1,
@@ -14,37 +15,42 @@ export const cats = [
     moneyMulti: 1,
     critChance: 0.05,
     critClickPower: 4,
-    cost: 50,
+    cost: 1,
   },
   {
     id: "multiCat",
-    name: "Multiplying cat",
+    apiType: "PASSIVE_CAT",
+    name: "Passive cat",
     clickMulti: 2,
-    cost: 200,
+    cost: 1,
   },
   {
     id: "moneyMultiCat",
+    apiType: "MONEY_MULTIPLIER",
     name: "Money multiplying cat",
     moneyMulti: 1.2,
-    cost: 3500,
+    cost: 1,
   },
   {
     id: "critMultiCat",
+    apiType: "CRIT_MULTIPLIER",
     name: "Crit click multiplying cat",
     critMulti: 2.5,
-    cost: 5000,
+    cost: 1,
   },
   {
     id: "critChanceMultiCat",
+    apiType: "CRIT_CHANCE",
     name: "Crit chance multiplying cat",
     critChanceMulti: 0.07,
-    cost: 10000,
+    cost: 1,
   },
   {
     id: "moneyDropChanceCat",
+    apiType: "MONEY_CHANCE",
     name: "Money drop chance multiplying cat",
     moneyDropChance: 0.33,
-    cost: 25000,
+    cost: 1,
   },
 ];
 
@@ -92,7 +98,7 @@ export const upgrades = [
     id: "multiCat1",
     catId: "multiCat",
     name: "Level 1",
-    catName: "Multiplying cat",
+    catName: "Passive cat",
     clickMulti: 10,
     cost: 1000,
   },
@@ -100,7 +106,7 @@ export const upgrades = [
     id: "multiCat2",
     catId: "multiCat",
     name: "Level 2",
-    catName: "Multiplying cat",
+    catName: "Passive cat",
     clickMulti: 30,
     cost: 3000,
   },
@@ -108,7 +114,7 @@ export const upgrades = [
     id: "multiCat3",
     catId: "multiCat",
     name: "Level 3",
-    catName: "Multiplying cat",
+    catName: "Passive cat",
     clickMulti: 100,
     cost: 8000,
   },
@@ -211,12 +217,12 @@ export const upgrades = [
 ];
 
 export const items = [
-  { id: "kremowka", name: "Kremówka", image: kremowka, boost: 21, time: 37 },
-  { id: "boost", name: "Boost", image: twoX, boost: 2, time: 300 },
+  { id: "kremowka", apiId: 2, name: "Kremówka", image: kremowka, boost: 21, time: 37 },
+  { id: "boost", apiId: 1, name: "Cat Boost", image: twoX, boost: 2, time: 300 },
 ];
 
 export const clickCats = [
-  {id: "default", name: "John Cat", image: cat},
-  {id: "floppa", name: "Floppa Cat", image: floppaCat},
-  {id: "pope", name: "Pope Cat", image: popeCat}
+  { id: "default", code: "JOHN_CAT", name: "John Cat", image: cat, imagePath: "../assets/cat.png" },
+  { id: "floppa", code: "FLOPPA_CAT", name: "Floppa Cat", image: floppaCat, imagePath: "../assets/flop.webp" },
+  { id: "pope", code: "POPE_CAT", name: "Pope Cat", image: popeCat, imagePath: "../assets/pope.webp" },
 ];

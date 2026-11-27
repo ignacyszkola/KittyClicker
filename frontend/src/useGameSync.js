@@ -1,34 +1,37 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useAuth } from "./useAuth";
-import { loadGame, saveGame, saveGameOnExit, toSaveBody } from "./api/game";
+import { loadGame } from "./api/game";
 
-const SAVE_INTERVAL = 30000;
+const REFRESH_INTERVAL = 10000;
 
-export function useGameSync(state, applyState) {
+export function useGameSync(applyState) {
   const { token } = useAuth();
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState("");
-  const [rateLimited, setRateLimited] = useState(false);
-  const pausedUntilRef = useRef(0);
-
-  const stateRef = useRef(state);
   const applyRef = useRef(applyState);
-  const lastSavedRef = useRef(null);
 
   useEffect(() => {
-    stateRef.current = state;
     applyRef.current = applyState;
-  });
+  }, [applyState]);
+
+  const refresh = useCallback(async () => {
+    if (!token) throw new Error("No authentication token");
+    const data = await loadGame(token);
+    applyRef.current(data);
+    setError("");
+    setLoaded(true);
+    return data;
+  }, [token]);
 
   useEffect(() => {
-    if (!token) return;
+    if (!token) return undefined;
 
     let cancelled = false;
     loadGame(token)
       .then((data) => {
         if (cancelled) return;
         applyRef.current(data);
-        lastSavedRef.current = JSON.stringify(toSaveBody(data));
+        setError("");
         setLoaded(true);
       })
       .catch((err) => {
@@ -38,58 +41,16 @@ export function useGameSync(state, applyState) {
     return () => {
       cancelled = true;
     };
-  }, [token]);
-
-  const save = useCallback(async () => {
-    if (Date.now() < pausedUntilRef.current) return;
-
-    const json = JSON.stringify(toSaveBody(stateRef.current));
-    if (json === lastSavedRef.current) return;
-
-    lastSavedRef.current = json;
-    try {
-      await saveGame(token, stateRef.current);
-      setRateLimited(false);
-    } catch (err) {
-      lastSavedRef.current = null;
-
-      if (err.status === 429) {
-        pausedUntilRef.current = Date.now() + (err.retryAfter ?? 10) * 1000;
-        setRateLimited(true);
-      }
-    }
-  }, [token]);
+  }, [refresh, token]);
 
   useEffect(() => {
-    if (!loaded || !token) return;
+    if (!loaded) return undefined;
 
-    const id = setInterval(save, SAVE_INTERVAL);
+    const id = setInterval(() => {
+      refresh().catch((err) => setError(err.message));
+    }, REFRESH_INTERVAL);
+    return () => clearInterval(id);
+  }, [loaded, refresh]);
 
-    function onHide() {
-      if (document.visibilityState === "hidden") {
-        saveGameOnExit(token, stateRef.current);
-      }
-    }
-    document.addEventListener("visibilitychange", onHide);
-
-    return () => {
-      clearInterval(id);
-      document.removeEventListener("visibilitychange", onHide);
-    };
-  }, [loaded, token, save]);
-
-  const purchasesKey = JSON.stringify([
-    state.ownedCats,
-    state.ownedUpgrades,
-    state.ownedItems,
-    state.claimed,
-    state.selectedCatId,
-  ]);
-
-  useEffect(() => {
-    if (!loaded) return;
-    save();
-  }, [purchasesKey, loaded, save]);
-
-  return { loaded, error, rateLimited, saveNow: save };
+  return { loaded, error, refresh, saveNow: refresh };
 }

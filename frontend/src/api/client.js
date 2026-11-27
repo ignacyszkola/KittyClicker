@@ -1,14 +1,33 @@
-export const USE_MOCK = import.meta.env.VITE_USE_MOCK !== "false";
-
 let onUnauthorized = null;
 
 export function setUnauthorizedHandler(fn) {
   onUnauthorized = fn;
 }
 
+export function normalizeToken(token) {
+  return typeof token === "string" ? token.trim().replace(/^Bearer\s+/i, "") : "";
+}
+
 export async function apiFetch(url, { token, keepalive, headers, ...options } = {}) {
   const allHeaders = { "Content-Type": "application/json", ...headers };
-  if (token) allHeaders.Authorization = `Bearer ${token}`;
+  const isPublicAuthRequest =
+    url === "/api/auth/login" || url === "/api/auth/register";
+  const isPublicStatusRequest = url === "/api/users/status";
+  const storedToken =
+    !isPublicAuthRequest && typeof localStorage !== "undefined"
+      ? localStorage.getItem("token")
+      : null;
+  const requestToken = normalizeToken(token) || normalizeToken(storedToken);
+  if (
+    url.startsWith("/api/") &&
+    !isPublicAuthRequest &&
+    !isPublicStatusRequest &&
+    !requestToken
+  ) {
+    if (onUnauthorized) onUnauthorized();
+    throw new Error("Brak tokenu logowania. Zaloguj się ponownie.");
+  }
+  if (requestToken) allHeaders.Authorization = `Bearer ${requestToken}`;
 
   let res;
   try {
@@ -20,9 +39,15 @@ export async function apiFetch(url, { token, keepalive, headers, ...options } = 
   const data = await res.json().catch(() => ({}));
 
   if (!res.ok) {
-    if (res.status === 401 && token && onUnauthorized) onUnauthorized();
+    if (res.status === 401 && requestToken && onUnauthorized) onUnauthorized();
 
-    const error = new Error(data.message || "something went wrong");
+    const validationMessage = data.errors
+      ? Object.values(data.errors).find((message) => typeof message === "string")
+      : null;
+    const defaultMessage = res.status === 403
+      ? `Brak uprawnień (403; ${requestToken ? "JWT wysłany" : "bez JWT"})`
+      : `Żądanie nie powiodło się (${res.status})`;
+    const error = new Error(validationMessage || data.message || defaultMessage);
     error.status = res.status;
 
     if (res.status === 429) {

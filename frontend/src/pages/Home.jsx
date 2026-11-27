@@ -4,7 +4,7 @@ import menuIcon from "../assets/menu.svg";
 import cursorIcon from "../assets/cursor.png";
 import catFoodIcon from "../assets/cat-food.png";
 import closeIcon from "../assets/close.svg";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { FormatNumber } from "../utils/FormatNumber";
 import LeftMenu from "../components/LeftMenu";
 import AchievmentsMenu from "../components/AchievmentsMenu";
@@ -12,20 +12,26 @@ import ItemsMenu from "../components/ItemsMenu";
 import CatsMenu from "../components/CatsMenu";
 import AccountMenu from "../components/AccountMenu";
 import cat from "../assets/cat.png";
-import { cats, upgrades, items } from "../utils/ShopData";
+import { cats, upgrades, items, clickCats } from "../utils/ShopData";
 import ShopItem from "../components/ShopItem";
 import clickSound from "../assets/clickSound.mp3";
 import clickCat from "../assets/clickCat.webp";
-import multiCat from "../assets/multiCat.gif"
-import moneyMultiCat from "../assets/moneyMultiCat.gif"
-import critMultiCat from "../assets/critMultiCat.webp"
-import critChanceMultiCat from "../assets/critChanceMultiCat.webp"
-import moneyDropChanceCat from "../assets/moneyDropChanceCat.webp"
+import multiCat from "../assets/multiCat.gif";
+import moneyMultiCat from "../assets/moneyMultiCat.gif";
+import critMultiCat from "../assets/critMultiCat.webp";
+import critChanceMultiCat from "../assets/critChanceMultiCat.webp";
+import moneyDropChanceCat from "../assets/moneyDropChanceCat.webp";
 import { useGameSync } from "../useGameSync";
 import { useClickSender } from "../useClickSender";
 import { useGoldenCat } from "../useGoldenCat";
 import GoldenCat from "../components/GoldenCat";
-
+import { useAuth } from "../useAuth";
+import {
+  buyCat as buyCatRequest,
+  upgradeCat as upgradeCatRequest,
+  useItem as activateItemRequest,
+  selectSkin,
+} from "../api/game";
 
 function PlaySound(type) {
   const sounds = {
@@ -40,7 +46,7 @@ function ClickCat({ ownedCats }) {
   if (!ownedCats.clickCat) return null;
   return (
     <div className="clickCat">
-      <img src={clickCat} draggable="false"/>
+      <img src={clickCat} draggable="false" />
     </div>
   );
 }
@@ -49,7 +55,7 @@ function MultiCat({ ownedCats }) {
   if (!ownedCats.multiCat) return null;
   return (
     <div className="multiCat">
-      <img src={multiCat} draggable="false"/>
+      <img src={multiCat} draggable="false" />
     </div>
   );
 }
@@ -58,7 +64,7 @@ function MoneyMultiCat({ ownedCats }) {
   if (!ownedCats.moneyMultiCat) return null;
   return (
     <div className="moneyMultiCat">
-      <img src={moneyMultiCat} draggable="false"/>
+      <img src={moneyMultiCat} draggable="false" />
     </div>
   );
 }
@@ -67,7 +73,7 @@ function CritMultiCat({ ownedCats }) {
   if (!ownedCats.critMultiCat) return null;
   return (
     <div className="critMultiCat">
-      <img src={critMultiCat} draggable="false"/>
+      <img src={critMultiCat} draggable="false" />
     </div>
   );
 }
@@ -76,7 +82,7 @@ function CritChanceMultiCat({ ownedCats }) {
   if (!ownedCats.critChanceMultiCat) return null;
   return (
     <div className="critChanceMultiCat">
-      <img src={critChanceMultiCat} draggable="false"/>
+      <img src={critChanceMultiCat} draggable="false" />
     </div>
   );
 }
@@ -85,7 +91,7 @@ function MoneyDropChanceCat({ ownedCats }) {
   if (!ownedCats.moneyDropChanceCat) return null;
   return (
     <div className="moneyDropChanceCat">
-      <img src={moneyDropChanceCat} draggable="false"/>
+      <img src={moneyDropChanceCat} draggable="false" />
     </div>
   );
 }
@@ -123,7 +129,7 @@ function ClickPopups({ popups }) {
 function OpenLftMenuBtn({ onClick, isOpen }) {
   return (
     <button className="menuButton" onClick={onClick}>
-      <img src={isOpen ? closeIcon : menuIcon} draggable="false"/>
+      <img src={isOpen ? closeIcon : menuIcon} draggable="false" />
     </button>
   );
 }
@@ -166,7 +172,16 @@ function Shop({ money, ownedCats, ownedUpgrades, buyCat, buyUpgrade }) {
             .filter((cat) => ownedCats[cat.id])
             .map((cat) => {
               const level = ownedUpgrades[cat.id] || 0;
-              return upgrades.filter((u) => u.catId === cat.id)[level];
+              const upgrade = upgrades.filter((u) => u.catId === cat.id)[level];
+              return {
+                ...(upgrade || {
+                  id: `${cat.id}-${level + 1}`,
+                  catId: cat.id,
+                  catName: cat.name,
+                  name: `Level ${level + 1}`,
+                }),
+                cost: Math.ceil(1 + (level + 1) * 1.5),
+              };
             })
             .filter(Boolean)
             .map((upgrade) => (
@@ -186,7 +201,7 @@ function Shop({ money, ownedCats, ownedUpgrades, buyCat, buyUpgrade }) {
 function ClickCounter({ clicksNumber }) {
   return (
     <div className="clickCounter">
-      <img src={cursorIcon} draggable="false"/>
+      <img src={cursorIcon} draggable="false" />
       <p>{FormatNumber(clicksNumber)}</p>
     </div>
   );
@@ -195,15 +210,17 @@ function ClickCounter({ clicksNumber }) {
 function MoneyCounter({ moneyNumber }) {
   return (
     <div className="moneyCounter">
-      <img src={catFoodIcon} draggable="false"/>
+      <img src={catFoodIcon} draggable="false" />
       <p>{FormatNumber(moneyNumber)}</p>
     </div>
   );
 }
 
 function Home() {
+  const { token, user } = useAuth();
   const [clicks, setClicks] = useState(0);
   const [money, setMoney] = useState(0);
+  const gameTotals = useRef({ clicks: 0, money: 0 });
   const [leftMenu, setleftMenu] = useState(false);
   const [achievmentsMenu, setachievmentsMenu] = useState(false);
   const [itemsMenu, setitemsMenu] = useState(false);
@@ -212,42 +229,88 @@ function Home() {
   const [ownedCats, setOwnedCats] = useState({});
   const [ownedUpgrades, setOwnedUpgrades] = useState({});
   const [ownedItems, setOwnedItems] = useState({});
+  const [ownedSelectCats, setOwnedSelectCats] = useState({});
   const [popups, setPopups] = useState([]);
   const popupId = useRef(0);
   const [activeBoosts, setActiveBoosts] = useState([]);
   const [claimed, setClaimed] = useState({});
-  const [selectedCat, setSelectedCat] = useState({image: cat});
+  const [selectedCat, setSelectedCat] = useState({ image: cat });
+  const [actionError, setActionError] = useState("");
 
-  const { send: sendClickToServer, limited } = useClickSender();
-
-  const gameState = { clicks, money, ownedCats, ownedUpgrades, ownedItems, claimed};
-
-  const { loaded, error, rateLimited, saveNow } = useGameSync(gameState, (data) => {
+  const { loaded, error, refresh } = useGameSync((data) => {
     setClicks(data.clicks);
     setMoney(data.money);
+    gameTotals.current = { clicks: data.clicks, money: data.money };
     setOwnedCats(data.ownedCats);
     setOwnedUpgrades(data.ownedUpgrades);
     setOwnedItems(data.ownedItems);
-    setClaimed(data.claimed);
+    setOwnedSelectCats(data.ownedSelectCats);
+    setClaimed(data.claimedAchievements);
+    const skin = clickCats.find((candidate) =>
+      data.selectedCatId.endsWith(candidate.imagePath || ""),
+    );
+    setSelectedCat(skin || clickCats[0]);
   });
 
-  const { location: goldeCatLocation, catchCat: catchGoldenCat } = useGoldenCat({
-    enabled: loaded && !error,
-    beforeClaim: saveNow,
-    onClaimed: ({ reward, amount, message }) => {
-      setMoney(amount);
-      addPopups([{ type: "golden", text: message || `Golden Cat +${FormatNumber(reward)}` }]);
+  const { send: sendClickToServer, limited } = useClickSender({
+    onResult: (result) => {
+      const nextClicks = Number(result.clicks) || 0;
+      const nextMoney = Number(result.totalMoney) || 0;
+      const clicksEarned = Math.max(0, nextClicks - gameTotals.current.clicks);
+      const moneyEarned = Math.max(0, nextMoney - gameTotals.current.money);
+      gameTotals.current = { clicks: nextClicks, money: nextMoney };
+      setClicks(nextClicks);
+      setMoney(nextMoney);
+
+      const popups = [
+        { type: "click", text: `+${FormatNumber(clicksEarned)}` },
+      ];
+      if (result.didMoneyDrop) {
+        popups.push({
+          type: "money",
+          text: `+${FormatNumber(moneyEarned)}`,
+        });
+      }
+      if (result.didCritDrop) {
+        popups.push({
+          type: "crit",
+          text: `+${FormatNumber(clicksEarned)}`,
+        });
+      }
+      if (result.isAchievementUnlocked) {
+        popups.push({ type: "golden", text: "Achievement unlocked!" });
+      }
+      if (result.itemReceivedName) {
+        popups.push({
+          type: "golden",
+          text: `Received ${result.itemReceivedName}`,
+        });
+      }
+      addPopups(popups);
+
+      if (result.isAchievementUnlocked || result.itemReceivedName) {
+        refresh().catch((err) => setActionError(err.message));
+      }
     },
-    onError: (err) => addPopups([{ type: "golden", text: err.message }]),
+    onError: (err) => setActionError(err.message),
   });
 
-  const boostMulti = activeBoosts.reduce((m, b) => m * b.boost, 1);
-
-  const clickPower = 1 * UpgradeValue("multiCat", "clickMulti") * boostMulti;
-  const moneyDropChance = UpgradeValue("moneyDropChanceCat", "moneyDropChance", 0.25);
-  const moneyMulti = 1 * UpgradeValue("moneyMultiCat", "moneyMulti");
-  const critClickPower = UpgradeValue("critMultiCat", "critMulti", 2);
-  const critChance = UpgradeValue("critChanceMultiCat", "critChanceMulti", 0.05);
+  const { location: goldeCatLocation, catchCat: catchGoldenCat } = useGoldenCat(
+    {
+      enabled: loaded && !error,
+      beforeClaim: refresh,
+      onClaimed: ({ reward, amount, message }) => {
+        setMoney(amount);
+        addPopups([
+          {
+            type: "golden",
+            text: message || `Golden Cat +${FormatNumber(reward)}`,
+          },
+        ]);
+      },
+      onError: (err) => addPopups([{ type: "golden", text: err.message }]),
+    },
+  );
 
   function addPopups(items) {
     const created = items.map((item) => ({
@@ -265,150 +328,79 @@ function Home() {
     }, 900);
   }
 
-  function UpgradeValue(catId, key, base = 1) {
-    const cat = cats.find((c) => c.id === catId);
-    if (!ownedCats[catId]) return base;
-
-    const level = ownedUpgrades[catId] || 0;
-    if (level === 0) return cat[key] ?? base;
-
-    const upgrade = upgrades.filter((u) => u.catId === catId)[level - 1];
-    return upgrade[key] ?? base;
-  }
-
-  function BuyCat(cat) {
+  async function BuyCat(cat) {
     if (ownedCats[cat.id] || money < cat.cost) return;
-    setMoney((m) => m - cat.cost);
-    setOwnedCats((o) => ({ ...o, [cat.id]: true }));
+    setActionError("");
+    try {
+      await buyCatRequest(token, user.userId, cat.apiType);
+      await refresh();
+    } catch (err) {
+      setActionError(err.message);
+    }
   }
 
-  function BuyUpgrade(upgrade) {
+  async function BuyUpgrade(upgrade) {
     const level = ownedUpgrades[upgrade.catId] || 0;
-    const next = upgrades.filter((u) => u.catId === upgrade.catId)[level];
+    const upgradeCost = Math.ceil(1 + (level + 1) * 1.5);
+    const cat = cats.find((candidate) => candidate.id === upgrade.catId);
 
-    if (!next || next.id !== upgrade.id) return;
     if (!ownedCats[upgrade.catId]) return;
-    if (money < upgrade.cost) return;
+    if (!cat || money < upgradeCost) return;
 
-    setMoney((m) => m - upgrade.cost);
-    setOwnedUpgrades((l) => ({ ...l, [upgrade.catId]: level + 1 }));
+    setActionError("");
+    try {
+      await upgradeCatRequest(token, user.userId, cat.apiType);
+      await refresh();
+    } catch (err) {
+      setActionError(err.message);
+    }
   }
 
-  //DOKONCZYC efekt uzycia, claimowanie itemow z osiagniecia i zeby wtedy juz nie mozna bylo zclaimowac z tego achievmenta
-  function UseItem(item) {
-    if (!ownedItems[item.id]) return;
+  async function UseItem(item) {
+    if (!ownedItems[item.id] || activeBoosts.length > 0) return;
 
-    setOwnedItems((o) => ({ ...o, [item.id]: o[item.id] - 1 }));
+    setActionError("");
+    try {
+      await activateItemRequest(token, user.userId, item.apiId);
+      await refresh();
 
-    const boostId = Date.now() + Math.random();
-    setActiveBoosts((list) => [
-      ...list,
-      {
-        id: boostId,
-        itemId: item.id,
-        boost: item.boost,
-        endsAt: Date.now() + item.time * 1000,
-      },
-    ]);
-
-    setTimeout(() => {
-      setActiveBoosts((list) => list.filter((b) => b.id !== boostId));
-    }, item.time * 1000);
+      const boostId = Date.now() + Math.random();
+      setActiveBoosts((list) => [...list, { id: boostId }]);
+      setTimeout(() => {
+        setActiveBoosts((list) => list.filter((boost) => boost.id !== boostId));
+      }, item.time * 1000);
+    } catch (err) {
+      setActionError(err.message);
+    }
   }
 
-  function ClaimItem(achievement) {
-    setClaimed((c) => ({ ...c, [achievement.id]: true }));
-    setOwnedItems((o) => ({
-      ...o,
-      [achievement.reward]: (o[achievement.reward] ?? 0) + 1,
-    }));
-  }
+  async function ChooseCat(cat) {
+    if (!ownedSelectCats[cat.code]) return;
 
-  function ChooseCat(cat){
-    setSelectedCat(cat);
+    setActionError("");
+    try {
+      await selectSkin(token, user.userId, cat.imagePath);
+      setSelectedCat(cat);
+      await refresh();
+    } catch (err) {
+      setActionError(err.message);
+    }
   }
 
   function Click() {
     sendClickToServer();
-    let moneyGain = 0;
-    let critGain = 0;
-
-    for (let i = 0; i < Math.floor(clickPower); i++) {
-      if (Math.random() < moneyDropChance) moneyGain += moneyMulti;
-    }
-
-    if (Math.random() < critChance) critGain += clickPower * critClickPower;
-
-    if (critGain > 0) {
-      for (let i = 0; i < Math.floor(critGain); i++) {
-        if (Math.random() < moneyDropChance) moneyGain += moneyMulti;
-      }
-    }
-
-    setClicks((c) => c + clickPower + critGain);
-    if (moneyGain > 0) setMoney((m) => m + moneyGain);
-
-    const items = [{ type: "click", text: `+${clickPower}` }];
-    if (moneyGain > 0) items.push({ type: "money", text: `+${moneyGain}` });
-    if (critGain > 0) items.push({ type: "crit", text: `CRIT +${critGain}` });
-    addPopups(items);
+    setActionError("");
   }
 
-  function GetClickCatStat(key) {
-    const level = ownedUpgrades.clickCat || 0;
-    const upgradesList = upgrades.filter((u) => u.catId === "clickCat");
-
-    return (
-      upgradesList[level - 1]?.[key] ??
-      cats.find((c) => c.id === "clickCat")?.[key] ??
-      0
-    );
-  }
-
-  useEffect(() => {
-    if (!ownedCats.clickCat) return;
-
-    const clickPower = GetClickCatStat("clickPower");
-    const clickSpeed = GetClickCatStat("clickSpeed");
-    const moneyDropChance = GetClickCatStat("moneyDropChance");
-    const moneyDropAmount = GetClickCatStat("moneyMulti");
-    const critChance = GetClickCatStat("critChance");
-    const critClickPower = GetClickCatStat("critClickPower");
-
-    const id = setInterval(() => {
-      let moneyGain = 0;
-      let critGain = 0;
-      for (let i = 0; i < Math.floor(clickPower); i++) {
-        if (Math.random() < moneyDropChance) moneyGain += moneyDropAmount;
-      }
-
-      if (Math.random() < critChance) critGain += clickPower * critClickPower;
-
-      if (critGain > 0) {
-        for (let i = 0; i < Math.floor(critGain); i++) {
-          if (Math.random() < moneyDropChance) moneyGain += moneyDropAmount;
-        }
-      }
-
-      setClicks((c) => c + clickPower + critGain);
-      if (moneyGain > 0) setMoney((m) => m + moneyGain);
-
-      const items = [{ type: "click", text: `+${clickPower}` }];
-      if (moneyGain > 0) items.push({ type: "money", text: `+${moneyGain}` });
-      if (critGain > 0) items.push({ type: "crit", text: `CRIT +${critGain}` });
-      addPopups(items);
-    }, 1000 / clickSpeed);
-
-    return () => clearInterval(id);
-  }, [ownedCats.clickCat, ownedUpgrades.clickCat]);
-
-  if (error) return <p className="techMessage">Something went wrong : {error}</p>;
-  if (!loaded) return <p className="techMessage">Loading game...</p>;  
+  if (error)
+    return <p className="techMessage">Something went wrong : {error}</p>;
+  if (!loaded) return <p className="techMessage">Loading game...</p>;
 
   return (
     <>
       <h1 className="homeTitle">KittyClicker</h1>
-      {(limited || rateLimited) && <p className="rateLimitWarning">Klikasz zbyt szybko!</p>}
+      {limited && <p className="rateLimitWarning">Klikasz zbyt szybko!</p>}
+      {actionError && <p className="rateLimitWarning">{actionError}</p>}
       <OpenLftMenuBtn
         isOpen={leftMenu}
         onClick={() => setleftMenu((open) => !open)}
@@ -420,11 +412,11 @@ function Home() {
         buyCat={BuyCat}
         buyUpgrade={BuyUpgrade}
       />
-      <CatBtn onClick={Click} image={selectedCat.image}/>
+      <CatBtn onClick={Click} image={selectedCat.image} />
       <ClickPopups popups={popups} />
-      <GoldenCat location={goldeCatLocation} onCatch={catchGoldenCat}/>
+      <GoldenCat location={goldeCatLocation} onCatch={catchGoldenCat} />
       <ClickCat ownedCats={ownedCats} />
-      <MultiCat ownedCats={ownedCats}/>
+      <MultiCat ownedCats={ownedCats} />
       <MoneyMultiCat ownedCats={ownedCats} />
       <CritMultiCat ownedCats={ownedCats} />
       <CritChanceMultiCat ownedCats={ownedCats} />
@@ -466,7 +458,6 @@ function Home() {
         isOpen={achievmentsMenu}
         close={() => setachievmentsMenu(false)}
         clicks={clicks}
-        claim={ClaimItem}
         claimed={claimed}
       />
       <ItemsMenu
@@ -475,7 +466,12 @@ function Home() {
         ownedItems={ownedItems}
         use={UseItem}
       />
-      <CatsMenu isOpen={catsMenu} close={() => setcatsMenu(false)} choose={ChooseCat} />
+      <CatsMenu
+        isOpen={catsMenu}
+        close={() => setcatsMenu(false)}
+        choose={ChooseCat}
+        ownedSelectCats={ownedSelectCats}
+      />
       <AccountMenu isOpen={accountMenu} close={() => setaccountMenu(false)} />
     </>
   );

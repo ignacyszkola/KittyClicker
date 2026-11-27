@@ -5,9 +5,8 @@ import {
   infiniteAchievement,
   reachedAchievementLvl,
 } from "../utils/achievements";
-import { items } from "../utils/ShopData";
 
-function Achievement({ title, description, goal, clicks, claim, claimed }) {
+function Achievement({ title, description, goal, clicks, claimed }) {
   const done = clicks >= goal;
   const progress = Math.min(100, (clicks / goal) * 100);
 
@@ -23,13 +22,13 @@ function Achievement({ title, description, goal, clicks, claim, claimed }) {
         (claimed ? (
           <span className="achievementClaimed">Claimed</span>
         ) : (
-          <button className={`claimButton ${done ? "done" : ""}`}onClick={claim}>Claim</button>
+          <span className="achievementClaimed">Reward is automatic</span>
         ))}
     </div>
   );
 }
 
-function AchievmentsMenu({ isOpen, close, clicks, claim, claimed }) {
+function AchievmentsMenu({ isOpen, close, clicks, claimed }) {
   const reached = reachedAchievementLvl(clicks);
   const next = infiniteAchievement(reached + 1);
 
@@ -51,7 +50,6 @@ function AchievmentsMenu({ isOpen, close, clicks, claim, claimed }) {
           description={a.description}
           goal={a.goal}
           clicks={clicks}
-          claim={() => claim(a)}
           claimed={claimed[a.id]}
         />
       ))}
@@ -63,7 +61,6 @@ function AchievmentsMenu({ isOpen, close, clicks, claim, claimed }) {
           description={<>Achieve 10<sup>{a.power}</sup> clicks</>}
           goal={a.goal}
           clicks={clicks}
-          claim={() => claim(a)}
           claimed={claimed[a.id]}
         />
       ))}

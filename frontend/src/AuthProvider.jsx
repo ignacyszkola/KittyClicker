@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { AuthContext } from "./useAuth";
 import { loginRequest, registerRequest, meRequest } from "./api/auth";
-import { setUnauthorizedHandler } from "./api/client";
+import { normalizeToken, setUnauthorizedHandler } from "./api/client";
 
 export function AuthProvider({ children }) {
-  const [token, setToken] = useState(() => localStorage.getItem("token"));
+  const [token, setToken] = useState(() => normalizeToken(localStorage.getItem("token")));
   const [user, setUser] = useState(null);
   const loading = !!token && !user;
 
@@ -37,14 +37,17 @@ export function AuthProvider({ children }) {
 
   async function login(username, password) {
     const data = await loginRequest(username, password);
+    if (!data.token || !data.userId) {
+      throw new Error("The login response did not contain a valid user ID and token");
+    }
+
     localStorage.setItem("token", data.token);
     setToken(data.token);
-    setUser(data.user);
+    setUser({ id: data.userId, userId: data.userId, username: data.username });
   }
 
   async function register(username, password) {
     await registerRequest(username, password);
-    await login(username, password);
   }
 
   return (

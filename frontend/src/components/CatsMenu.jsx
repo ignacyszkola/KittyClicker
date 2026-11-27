@@ -13,7 +13,14 @@ function Cat({ name, image, choose }) {
   );
 }
 
-function CatsMenu({ isOpen, close, choose }) {
+function CatsMenu({ isOpen, close, choose, ownedSelectCats = {} }) {
+  const availableCats = clickCats
+    .filter((cat) => typeof ownedSelectCats[cat.code] === "string")
+    .map((cat) => ({
+      ...cat,
+      imagePath: ownedSelectCats[cat.code],
+    }));
+
   return (
     <div className={`catsMenu ${isOpen ? "open" : ""}`}>
       <h2>Cats</h2>
@@ -21,7 +28,8 @@ function CatsMenu({ isOpen, close, choose }) {
         <img src={closeIcon} />
       </button>
       <div className="catList">
-        {clickCats.map((cat) => (
+        {availableCats.length === 0 && <p>No cats unlocked yet.</p>}
+        {availableCats.map((cat) => (
           <Cat
             key={cat.id}
             name={cat.name}

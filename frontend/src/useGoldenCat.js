@@ -64,8 +64,11 @@ export function useGoldenCat({ enabled, beforeClaim, onClaimed, onError, minDela
           expiresAt,
           lifetime,
         });
-      } catch {
-        if (!cancelled) setResetTimer((r) => r + 1);
+      } catch (err) {
+        if (!cancelled) {
+          callbacksRef.current.onError?.(err);
+          setResetTimer((r) => r + 1);
+        }
       }
     }, delay);
 
