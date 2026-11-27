@@ -36,6 +36,10 @@ public class UserService {
     public UserActionResponse register(UserRegistrationRequest request){
         String hashedPassword = passwordEncoder.encode(request.password());
 
+        if (userRepository.existsByUsername(request.username())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already exists");
+        }
+
         User user = new User(request.username(), hashedPassword);
         User savedUser = userRepository.save(user);
 

@@ -71,7 +71,9 @@ public class MichalekService {
     public GameStatusResponse getGame(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("User not found"));
 
-        String selectedCat = user.getSelectedSkin() == null ? null : user.getSelectedSkin().getImagePath();
+        String selectedCat = user.getSelectedSkin() == null
+                ? ""
+                : user.getSelectedSkin().getImagePath();
 
         return new GameStatusResponse(
                 Map.of("points", user.getClicks()),
