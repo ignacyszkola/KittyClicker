@@ -81,7 +81,7 @@ Przykładowe typy kotów i ulepszeń: `POINTS_PER_CLICK`, `MONEY_CHANCE`, `CRIT_
 Interfejs dokumentacji OpenAPI/Swagger jest dostępny pod `http://localhost:8080/swagger-ui/index.html`.
 
 
-Bigos
+### Bigos
 Zobacz jak smakuje prawdziwy bigos tradycyjny. Poznaj mój sprawdzony przepis na bigos z dużą ilością różnych mięs, z suszonymi grzybami, śliwkami i idealnie dobranymi przyprawami. To danie, które Cię zachwyci.
 
 Czas przygotowania: 2 godziny
